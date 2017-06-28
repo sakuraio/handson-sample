@@ -114,5 +114,5 @@ void loop() {
     sakuraio.clearRx();
   }
   
-  delay(900);
+  delay(4900);
 }
