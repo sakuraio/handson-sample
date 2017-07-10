@@ -1,0 +1,271 @@
+[
+    {
+        "id": "d008ebbb.08c928",
+        "type": "tab",
+        "label": "Twitter投稿（照度）"
+    },
+    {
+        "id": "854150b8.7e5fb",
+        "type": "comment",
+        "z": "d008ebbb.08c928",
+        "name": "Twitter投稿サンプル（照度）",
+        "info": "本フローはヴァル研究所共催のsakura.ioハンズオンで利用する、Arduino Unoと照度センサ（CdSセル）を用いたTwitter連携を試すものです。\n\nsakura.ioのWebSocket`wss://api.sakura.io/ws/v1/.....`サービスから送信されたJSONデータから照度（Channel0）を取り出し、通常の範囲（明るい場合は低く、暗い場合は高い数値が出ます）を逸脱した場合に指定したTwittter IDを用いてTwitterにメッセージを投稿します。\n\n照度センサによっては個体差があるため、Switchノードは実際の数値の範囲を確認したうえで、Arduinoスケッチの`UPPERLIMIT`値と併せて変更ください。\n\n> [sakura.io コントロールパネル](https://secure.sakura.ad.jp/iot/)\n\n> [利用Arduinoスケッチ](https://github.com/sakuraio/handson-sample/blob/master/arduino/illminance.ino)\n\n> [参考ハンズオン資料](https://www.slideshare.net/sakura_pr/sakuraio-handson)",
+        "x": 140,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "9566f997.5e7f28",
+        "type": "trigger",
+        "z": "d008ebbb.08c928",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "10",
+        "extend": false,
+        "units": "min",
+        "reset": "",
+        "name": "10分に1回のみ動作",
+        "x": 350,
+        "y": 340,
+        "wires": [
+            [
+                "42555abf.ec7764"
+            ]
+        ]
+    },
+    {
+        "id": "42555abf.ec7764",
+        "type": "function",
+        "z": "d008ebbb.08c928",
+        "name": "メッセージ化（暗）",
+        "func": "msg.payload = '【テスト】さくらインターネットのハンズオンで照度情報を取得中！ただ今現地の照度は'+msg.payload+'だよ、ちょっと暗いみたい。正式サービス版もよろしくね！ #駅すぱあとWebサービス #ヴァル研究所 #さくらのIoTPlatform #さくらインターネット';return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 340,
+        "wires": [
+            [
+                "bb6a6599.143e28",
+                "6b225f29.8291f"
+            ]
+        ]
+    },
+    {
+        "id": "8b91ac35.1dbf4",
+        "type": "switch",
+        "z": "d008ebbb.08c928",
+        "name": "照度判定",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lte",
+                "v": "250",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            },
+            {
+                "t": "gte",
+                "v": "750",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 3,
+        "x": 160,
+        "y": 300,
+        "wires": [
+            [
+                "dab0a6c9.9d5658"
+            ],
+            [
+                "c6cc07d1.fc67a8"
+            ],
+            [
+                "9566f997.5e7f28"
+            ]
+        ]
+    },
+    {
+        "id": "bb6a6599.143e28",
+        "type": "debug",
+        "z": "d008ebbb.08c928",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 770,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "6b225f29.8291f",
+        "type": "twitter out",
+        "z": "d008ebbb.08c928",
+        "twitter": "",
+        "name": "Tweet",
+        "x": 750,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "f8470a6c.b2a648",
+        "type": "function",
+        "z": "d008ebbb.08c928",
+        "name": "ch0のJSONデータをパース",
+        "func": "var msg = {payload: msg.payload.payload.channels[0].value};return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 200,
+        "y": 200,
+        "wires": [
+            [
+                "8b91ac35.1dbf4",
+                "54002369.ceadac"
+            ]
+        ]
+    },
+    {
+        "id": "dab0a6c9.9d5658",
+        "type": "trigger",
+        "z": "d008ebbb.08c928",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "10",
+        "extend": false,
+        "units": "min",
+        "reset": "",
+        "name": "10分に1回のみ動作",
+        "x": 350,
+        "y": 260,
+        "wires": [
+            [
+                "8db4a874.b45cb8"
+            ]
+        ]
+    },
+    {
+        "id": "c6cc07d1.fc67a8",
+        "type": "debug",
+        "z": "d008ebbb.08c928",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 330,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "8db4a874.b45cb8",
+        "type": "function",
+        "z": "d008ebbb.08c928",
+        "name": "メッセージ化（明）",
+        "func": "msg.payload = '【テスト】さくらインターネットのハンズオンで照度情報を取得中！ただ今現地の照度は'+msg.payload+'だよ、すごく明るいね！正式サービス版もよろしくね！ #駅すぱあとWebサービス #ヴァル研究所 #さくらのIoTPlatform #さくらインターネット';return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 260,
+        "wires": [
+            [
+                "6b225f29.8291f",
+                "890fbc10.21cef"
+            ]
+        ]
+    },
+    {
+        "id": "f8c4d9f4.ee6348",
+        "type": "switch",
+        "z": "d008ebbb.08c928",
+        "name": "Type == Channelsの判定",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "channels",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 1,
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "f8470a6c.b2a648",
+                "10b93596.f3733a"
+            ]
+        ]
+    },
+    {
+        "id": "54002369.ceadac",
+        "type": "debug",
+        "z": "d008ebbb.08c928",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 770,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "890fbc10.21cef",
+        "type": "debug",
+        "z": "d008ebbb.08c928",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 770,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "cffa1e47.6d822",
+        "type": "json",
+        "z": "d008ebbb.08c928",
+        "name": "StringからObjectへの変換",
+        "x": 390,
+        "y": 80,
+        "wires": [
+            [
+                "f8c4d9f4.ee6348"
+            ]
+        ]
+    },
+    {
+        "id": "10b93596.f3733a",
+        "type": "debug",
+        "z": "d008ebbb.08c928",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 770,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "afe80837.9d7768",
+        "type": "websocket in",
+        "z": "d008ebbb.08c928",
+        "name": "sakura.io WebSocket",
+        "server": "",
+        "client": "",
+        "x": 140,
+        "y": 80,
+        "wires": [
+            [
+                "cffa1e47.6d822"
+            ]
+        ]
+    }
+]
