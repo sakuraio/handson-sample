@@ -1,0 +1,363 @@
+[
+    {
+        "id": "ef03a1a3.5e54d",
+        "type": "tab",
+        "label": "グラフ表示＆Twitter投稿（温度）",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ee627c29.edfc3",
+        "type": "websocket in",
+        "z": "ef03a1a3.5e54d",
+        "name": "sakuraio-websocket",
+        "server": "",
+        "client": "2c78bdd9.1a7fc2",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "9eaf7397.f6551"
+            ]
+        ]
+    },
+    {
+        "id": "9eaf7397.f6551",
+        "type": "json",
+        "z": "ef03a1a3.5e54d",
+        "name": "String→Objectへの変換",
+        "pretty": false,
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "5d700925.876a58"
+            ]
+        ]
+    },
+    {
+        "id": "5d700925.876a58",
+        "type": "switch",
+        "z": "ef03a1a3.5e54d",
+        "name": "Type＝Channelsだけ通過",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "channels",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 1,
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "e6b5fa2d.8f0e08",
+                "9cb24873.45c8e8"
+            ]
+        ]
+    },
+    {
+        "id": "e6b5fa2d.8f0e08",
+        "type": "function",
+        "z": "ef03a1a3.5e54d",
+        "name": "Channel0(temp) parse",
+        "func": "msg.payload = Math.round(msg.payload.payload.channels[0].value*10)/10;return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 440,
+        "y": 200,
+        "wires": [
+            [
+                "d9a5d69.bdbd628",
+                "a786da3c.a50bb8",
+                "d45772ec.0ea59",
+                "60ec6b9.1135994"
+            ]
+        ]
+    },
+    {
+        "id": "a786da3c.a50bb8",
+        "type": "ui_chart",
+        "z": "ef03a1a3.5e54d",
+        "name": "温度推移",
+        "group": "a5b979b0.22e028",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "label": "温度 (30分)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 680,
+        "y": 280,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d9a5d69.bdbd628",
+        "type": "ui_gauge",
+        "z": "ef03a1a3.5e54d",
+        "name": "温度",
+        "group": "a5b979b0.22e028",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "gtype": "gage",
+        "title": "現在の温度",
+        "label": "℃",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "40",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "30",
+        "seg2": "32",
+        "x": 670,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "d45772ec.0ea59",
+        "type": "debug",
+        "z": "ef03a1a3.5e54d",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 690,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9cb24873.45c8e8",
+        "type": "function",
+        "z": "ef03a1a3.5e54d",
+        "name": "Channel1(humi) parse",
+        "func": "msg.payload = Math.round(msg.payload.payload.channels[1].value*10)/10;return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 440,
+        "y": 400,
+        "wires": [
+            [
+                "a6f666c9.20d928",
+                "b7f3a03e.5fdb6",
+                "719e0d33.8ca274"
+            ]
+        ]
+    },
+    {
+        "id": "f8e7274.dfc7cd8",
+        "type": "debug",
+        "z": "ef03a1a3.5e54d",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 1050,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "b042498a.7b1338",
+        "type": "function",
+        "z": "ef03a1a3.5e54d",
+        "name": "メッセージ化",
+        "func": "msg.payload = 'BMXUGとさくらインターネットのハンズオンで温度情報を取得中！ただ今の現地温度は'+msg.payload+'度だよ。資料はhttps://goo.gl/qGPjJnです！今後ともよろしくお願いします！ #bluemix #bmxug #sakuraio #さくらインターネット';return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 340,
+        "wires": [
+            [
+                "f8e7274.dfc7cd8",
+                "d31f0cf8.7c4e"
+            ]
+        ]
+    },
+    {
+        "id": "60ec6b9.1135994",
+        "type": "trigger",
+        "z": "ef03a1a3.5e54d",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "10",
+        "extend": false,
+        "units": "min",
+        "reset": "",
+        "name": "",
+        "x": 690,
+        "y": 340,
+        "wires": [
+            [
+                "b042498a.7b1338"
+            ]
+        ]
+    },
+    {
+        "id": "d31f0cf8.7c4e",
+        "type": "twitter out",
+        "z": "ef03a1a3.5e54d",
+        "twitter": "",
+        "name": "Tweet",
+        "x": 1030,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "a6f666c9.20d928",
+        "type": "debug",
+        "z": "ef03a1a3.5e54d",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 690,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b7f3a03e.5fdb6",
+        "type": "ui_gauge",
+        "z": "ef03a1a3.5e54d",
+        "name": "湿度",
+        "group": "26342c9b.e0ac94",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "gtype": "gage",
+        "title": "現在の湿度",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 670,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "719e0d33.8ca274",
+        "type": "ui_chart",
+        "z": "ef03a1a3.5e54d",
+        "name": "湿度推移",
+        "group": "26342c9b.e0ac94",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "label": "湿度 (30分)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 680,
+        "y": 480,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "c198f222.ef179",
+        "type": "comment",
+        "z": "ef03a1a3.5e54d",
+        "name": "グラフ表示＆Twitter投稿（温度）サンプル",
+        "info": "本フローはIBM Bluemix ＆ sakura.ioハンズオンで利用する、Arduino Unoと温湿度センサ（HDC1000 or SHT31）を用いたグラフ表示とTwitter連携を試すものです。\n\nsakura.ioのWebSocket`wss://api.sakura.io/ws/v1/.....`サービスから送信されたJSONデータから温度（Channel0）を取り出し、指定したTwittter IDを用いてTwitterにメッセージを投稿します。\n\nまたグラフ表示は`https://<Bluemix ダッシュボード記載の経路名>/ui/`で確認することができます。\n\n> [sakura.io コントロールパネル](https://secure.sakura.ad.jp/iot/)\n\n> [利用Arduinoスケッチ1](https://github.com/sakuraio/SakuraIOArduino/blob/master/examples/HDC1000/HDC1000.ino)\n\n> [利用Arduinoスケッチ2](https://github.com/sakuraio/SakuraIOArduino/blob/master/examples/SHT31/SHT31.ino)\n\n> [利用Arduinoスケッチ3](https://github.com/sakuraio/handson-sample/blob/master/arduino/HDC1000-with-LEDincome.ino)\n\n> [参考ハンズオン資料](https://www.slideshare.net/sakura_pr/sakuraio-handson-with-ibm-bluemix)",
+        "x": 180,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "2c78bdd9.1a7fc2",
+        "type": "websocket-client",
+        "z": "",
+        "path": "wss://api.sakura.io/ws/v1/",
+        "wholemsg": "false"
+    },
+    {
+        "id": "a5b979b0.22e028",
+        "type": "ui_group",
+        "z": "",
+        "name": "温度",
+        "tab": "4947510.b3724b",
+        "order": 1,
+        "disp": true,
+        "width": "8"
+    },
+    {
+        "id": "26342c9b.e0ac94",
+        "type": "ui_group",
+        "z": "",
+        "name": "湿度",
+        "tab": "4947510.b3724b",
+        "order": 2,
+        "disp": true,
+        "width": "8"
+    },
+    {
+        "id": "4947510.b3724b",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Handson",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
