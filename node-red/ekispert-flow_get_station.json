@@ -1,0 +1,163 @@
+[
+    {
+        "id": "776a234b.b478cc",
+        "type": "tab",
+        "label": "駅すぱあとWebサービス連携＆Slack投稿",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a6773c93.762e1",
+        "type": "comment",
+        "z": "776a234b.b478cc",
+        "name": "駅取得",
+        "info": "",
+        "x": 90,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "4b87dd3d.de5234",
+        "type": "http request",
+        "z": "776a234b.b478cc",
+        "name": "get station",
+        "method": "GET",
+        "ret": "obj",
+        "url": "",
+        "tls": "",
+        "x": 670,
+        "y": 180,
+        "wires": [
+            [
+                "88b57c72.f75a8"
+            ]
+        ]
+    },
+    {
+        "id": "179f5619.f6915a",
+        "type": "function",
+        "z": "776a234b.b478cc",
+        "name": "set url",
+        "func": "var stationName = msg.payload;\nvar url = encodeURI(context.global.ekispertWebServiceEndpoint + \"/v1/json/station?key=\" + context.global.ekispertWebServiceKey + \"&type=train&limit=1&name=\" + stationName);\nvar newMsg = {url: url};\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 510,
+        "y": 180,
+        "wires": [
+            [
+                "4b87dd3d.de5234"
+            ]
+        ]
+    },
+    {
+        "id": "48da20f1.bfa3b",
+        "type": "inject",
+        "z": "776a234b.b478cc",
+        "name": "",
+        "topic": "stationName",
+        "payload": "なんば",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 160,
+        "y": 180,
+        "wires": [
+            [
+                "131b336a.0aa5dd"
+            ]
+        ]
+    },
+    {
+        "id": "88b57c72.f75a8",
+        "type": "function",
+        "z": "776a234b.b478cc",
+        "name": "set station",
+        "func": "context.global.stationName = msg.payload.ResultSet.Point.Station.Name;\ncontext.global.stationCode = msg.payload.ResultSet.Point.Station.code;\n\nreturn {\n  payload: {\n    stationName: context.global.stationName,\n    stationCode: context.global.stationCode\n  }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 850,
+        "y": 180,
+        "wires": [
+            [
+                "b2a1bd23.5dbbd"
+            ]
+        ]
+    },
+    {
+        "id": "b2a1bd23.5dbbd",
+        "type": "debug",
+        "z": "776a234b.b478cc",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1030,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "50aba72d.b9c518",
+        "type": "inject",
+        "z": "776a234b.b478cc",
+        "name": "Init",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 110,
+        "y": 80,
+        "wires": [
+            [
+                "a0623bfa.7380b8"
+            ]
+        ]
+    },
+    {
+        "id": "a0623bfa.7380b8",
+        "type": "function",
+        "z": "776a234b.b478cc",
+        "name": "set variables",
+        "func": "// 定数\ncontext.global.WebHookURL = \"!!!slackのwebhook urlを記入!!!\";\ncontext.global.ekispertWebServiceKey = \"!!!駅すぱあとwebサービスのアクセスキーを記入!!!\";\ncontext.global.ekispertWebServiceEndpoint = \"http://api.ekispert.jp\";\n\n// 変数\ncontext.global.lightSensorOutput = 0;\ncontext.global.stationCode = \"\";\ncontext.global.stationName = \"\";",
+        "outputs": "0",
+        "noerr": 0,
+        "x": 270,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "5cc18feb.db028",
+        "type": "comment",
+        "z": "776a234b.b478cc",
+        "name": "グローバル変数の定義",
+        "info": "",
+        "x": 140,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "131b336a.0aa5dd",
+        "type": "delay",
+        "z": "776a234b.b478cc",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "179f5619.f6915a"
+            ]
+        ]
+    }
+]
