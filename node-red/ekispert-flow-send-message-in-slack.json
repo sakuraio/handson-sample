@@ -1,24 +1,24 @@
 [
     {
-        "id": "e53a4923.b90648",
+        "id": "97e06f68.30413",
         "type": "websocket in",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "Recieve data",
         "server": "",
-        "client": "2c78bdd9.1a7fc2",
+        "client": "9a51fb2e.9278c8",
         "x": 110,
         "y": 300,
         "wires": [
             [
-                "31c235a7.e23cfa",
-                "3c6b89d2.c16de6"
+                "a8336878.e41c18",
+                "63814c13.b76c34"
             ]
         ]
     },
     {
-        "id": "e47e38e9.642fa8",
+        "id": "24932685.b2642a",
         "type": "function",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "Set light value",
         "func": "context.global.lightSensorOutput = msg.payload.payload.channels[1].value;\nreturn msg;",
         "outputs": "1",
@@ -27,27 +27,27 @@
         "y": 300,
         "wires": [
             [
-                "cedd7dce.deeff"
+                "e8203974.973d88"
             ]
         ]
     },
     {
-        "id": "31c235a7.e23cfa",
+        "id": "a8336878.e41c18",
         "type": "json",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "",
         "x": 270,
         "y": 300,
         "wires": [
             [
-                "a5171295.e1dfe"
+                "f2227b2c.0c8708"
             ]
         ]
     },
     {
-        "id": "a5171295.e1dfe",
+        "id": "f2227b2c.0c8708",
         "type": "switch",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "Filter keepalives",
         "property": "payload.type",
         "propertyType": "msg",
@@ -64,14 +64,14 @@
         "y": 300,
         "wires": [
             [
-                "e47e38e9.642fa8"
+                "24932685.b2642a"
             ]
         ]
     },
     {
-        "id": "3c6b89d2.c16de6",
+        "id": "63814c13.b76c34",
         "type": "debug",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "",
         "active": false,
         "console": "false",
@@ -81,9 +81,9 @@
         "wires": []
     },
     {
-        "id": "c28d95ae.cdfab8",
+        "id": "da4bf5b2.f38f28",
         "type": "comment",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "sakura.ioから照度センサの値を取得",
         "info": "",
         "x": 180,
@@ -91,9 +91,9 @@
         "wires": []
     },
     {
-        "id": "8d6099f7.4cf328",
+        "id": "e8aeb0ed.6f51f",
         "type": "http request",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "get direction",
         "method": "GET",
         "ret": "obj",
@@ -103,30 +103,30 @@
         "y": 460,
         "wires": [
             [
-                "d82bda4a.646488"
+                "d5bf0471.4e7398"
             ]
         ]
     },
     {
-        "id": "cedd7dce.deeff",
+        "id": "e8203974.973d88",
         "type": "function",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "set url",
-        "func": "var newMsg = {\n  url: context.global.ekispertWebServiceEndpoint + \"/v1/json/station/timetable?key=\" + context.global.ekispertWebServiceKey + \"&stationCode=\" + context.global.stationCode\n};\nreturn newMsg;",
+        "func": "var newMsg = {\n  url: context.global.ekispertWebServiceEndpoint + \"/v1/json/station/timetable?key=\" + context.global.ekispertWebServiceKey + \"&stationCode=\" + context.global.stationCode + \"&code=1\"\n};\nreturn newMsg;",
         "outputs": 1,
         "noerr": 0,
         "x": 190,
         "y": 460,
         "wires": [
             [
-                "8d6099f7.4cf328"
+                "e8aeb0ed.6f51f"
             ]
         ]
     },
     {
-        "id": "efb03123.b585c",
+        "id": "a7998355.a6f16",
         "type": "http request",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "get timetable",
         "method": "GET",
         "ret": "obj",
@@ -136,30 +136,30 @@
         "y": 460,
         "wires": [
             [
-                "f1fb941a.fbf488"
+                "21220bdf.3d2194"
             ]
         ]
     },
     {
-        "id": "d82bda4a.646488",
+        "id": "d5bf0471.4e7398",
         "type": "function",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "set url",
-        "func": "var newMsg = {\n  url: \"http://api.ekispert.jp/v1/json/station/timetable?key=wC4SR9ETBhBcJ3Bv&stationCode=\" + context.global.stationCode + \"&code=1\",\n};\nreturn newMsg;",
+        "func": "var newMsg = {\n  url: context.global.ekispertWebServiceEndpoint + \"/v1/json/station/timetable?key=\" + context.global.ekispertWebServiceKey + \"&stationCode=\" + context.global.stationCode + \"&code=1\",\n};\nreturn newMsg;",
         "outputs": 1,
         "noerr": 0,
         "x": 510,
         "y": 460,
         "wires": [
             [
-                "efb03123.b585c"
+                "a7998355.a6f16"
             ]
         ]
     },
     {
-        "id": "f1fb941a.fbf488",
+        "id": "21220bdf.3d2194",
         "type": "function",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "format message",
         "func": "console.log(JSON.stringify(msg.payload.ResultSet));\nvar hourTable = msg.payload.ResultSet.TimeTable.HourTable;\nvar times = [];\nvar displayTimes = [];\nvar stationName = msg.payload.ResultSet.TimeTable.Station.Name;\nvar lineName = msg.payload.ResultSet.TimeTable.Line.Name;\nvar direction = msg.payload.ResultSet.TimeTable.Line.Direction;\nvar minuteAfter = 20;\n\n// 現在時刻の取得\nvar now = new Date();\n\n// 現在時刻から○分後の時刻を取得\nvar timeAfter = new Date();\ntimeAfter.setMinutes(timeAfter.getMinutes() + minuteAfter);\n\n// 時刻表をtimes変数に格納\nfor(var i = 0; i < hourTable.length; i++ ) {\n  for(var j = 0; j < hourTable[i].MinuteTable.length; j++) {\n    times.push(new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourTable[i].Hour, hourTable[i].MinuteTable[j].Minute));\n  }\n}\n\n// 現在時刻から○分以内の時刻のみ抽出\nfor(var i = 0; i < times.length; i++) {\n  if(now < times[i] && times[i] < timeAfter) {\n    displayTimes.push(times[i]);\n  }\n}\n\nvar slackMessage = `${lineName} ${stationName}の電車を調べたよ!\\n■${direction} 方面\\n${displayTimes.join(\"\\n\")}`;\n\nvar newMsg = {\n  payload: slackMessage,\n  channelURL: context.global.WebHookURL\n};\nreturn newMsg;",
         "outputs": 1,
@@ -168,15 +168,15 @@
         "y": 460,
         "wires": [
             [
-                "64d65d91.8efd14",
-                "e6e387ac.65f108"
+                "8b442f82.cd2c5",
+                "45fb5f77.0bc72"
             ]
         ]
     },
     {
-        "id": "64d65d91.8efd14",
+        "id": "8b442f82.cd2c5",
         "type": "slack",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "",
         "channelURL": "",
         "username": "",
@@ -187,9 +187,9 @@
         "wires": []
     },
     {
-        "id": "7b0e021f.e10ddc",
+        "id": "8bd343bb.94929",
         "type": "comment",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "時刻表取得",
         "info": "",
         "x": 200,
@@ -197,9 +197,9 @@
         "wires": []
     },
     {
-        "id": "e6e387ac.65f108",
+        "id": "45fb5f77.0bc72",
         "type": "debug",
-        "z": "776a234b.b478cc",
+        "z": "7b27f69f.de9e48",
         "name": "",
         "active": true,
         "console": "false",
@@ -209,7 +209,7 @@
         "wires": []
     },
     {
-        "id": "2c78bdd9.1a7fc2",
+        "id": "9a51fb2e.9278c8",
         "type": "websocket-client",
         "z": "",
         "path": "wss://api.sakura.io/ws/v1/",
