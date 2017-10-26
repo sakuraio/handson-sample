@@ -1,218 +1,305 @@
 [
     {
-        "id": "97e06f68.30413",
+        "id": "35e65a78.313a26",
         "type": "websocket in",
-        "z": "7b27f69f.de9e48",
-        "name": "Recieve data",
+        "z": "aa6d66c7.f71658",
+        "name": "sakuraio-websocket",
         "server": "",
-        "client": "9a51fb2e.9278c8",
-        "x": 110,
-        "y": 300,
+        "client": "",
+        "x": 130,
+        "y": 280,
         "wires": [
             [
-                "a8336878.e41c18",
-                "63814c13.b76c34"
+                "22418fce.8c736"
             ]
         ]
     },
     {
-        "id": "24932685.b2642a",
-        "type": "function",
-        "z": "7b27f69f.de9e48",
-        "name": "Set light value",
-        "func": "context.global.lightSensorOutput = msg.payload.payload.channels[1].value;\nreturn msg;",
-        "outputs": "1",
-        "noerr": 0,
-        "x": 640,
-        "y": 300,
-        "wires": [
-            [
-                "e8203974.973d88"
-            ]
-        ]
-    },
-    {
-        "id": "a8336878.e41c18",
+        "id": "22418fce.8c736",
         "type": "json",
-        "z": "7b27f69f.de9e48",
-        "name": "",
-        "x": 270,
-        "y": 300,
+        "z": "aa6d66c7.f71658",
+        "name": "String→Objectへの変換",
+        "pretty": false,
+        "x": 370,
+        "y": 280,
         "wires": [
             [
-                "f2227b2c.0c8708"
+                "bc7f945a.d37d38"
             ]
         ]
     },
     {
-        "id": "f2227b2c.0c8708",
+        "id": "bc7f945a.d37d38",
         "type": "switch",
-        "z": "7b27f69f.de9e48",
-        "name": "Filter keepalives",
+        "z": "aa6d66c7.f71658",
+        "name": "Type＝Channelsだけ通過",
         "property": "payload.type",
         "propertyType": "msg",
         "rules": [
             {
-                "t": "neq",
-                "v": "keepalive",
+                "t": "eq",
+                "v": "channels",
                 "vt": "str"
             }
         ],
         "checkall": "true",
         "outputs": 1,
-        "x": 440,
-        "y": 300,
+        "x": 630,
+        "y": 280,
         "wires": [
             [
-                "24932685.b2642a"
+                "d80dbc76.14adf"
             ]
         ]
     },
     {
-        "id": "63814c13.b76c34",
+        "id": "d80dbc76.14adf",
+        "type": "function",
+        "z": "aa6d66c7.f71658",
+        "name": "temp&humi parse",
+        "func": "// 温度をグローバル変数に代入\ncontext.global.temp = Math.round(msg.payload.payload.channels[0].value*10)/10;\n\n// 湿度をグローバル変数に代入\ncontext.global.humi = Math.round(msg.payload.payload.channels[1].value*10)/10;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 870,
+        "y": 280,
+        "wires": [
+            [
+                "7f0fdfc1.b286b"
+            ]
+        ]
+    },
+    {
+        "id": "7f0fdfc1.b286b",
         "type": "debug",
-        "z": "7b27f69f.de9e48",
+        "z": "aa6d66c7.f71658",
         "name": "",
-        "active": false,
+        "active": true,
         "console": "false",
-        "complete": "payload",
-        "x": 270,
+        "complete": "false",
+        "x": 1070,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "6a53c68d.cf3c68",
+        "type": "comment",
+        "z": "aa6d66c7.f71658",
+        "name": "駅すぱあと範囲探索&slack投稿",
+        "info": "",
+        "x": 170,
         "y": 340,
         "wires": []
     },
     {
-        "id": "da4bf5b2.f38f28",
-        "type": "comment",
-        "z": "7b27f69f.de9e48",
-        "name": "sakura.ioから照度センサの値を取得",
-        "info": "",
-        "x": 180,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "e8aeb0ed.6f51f",
+        "id": "fcecc9d.831a638",
         "type": "http request",
-        "z": "7b27f69f.de9e48",
-        "name": "get direction",
+        "z": "aa6d66c7.f71658",
+        "name": "get search multipleRange",
         "method": "GET",
         "ret": "obj",
         "url": "",
         "tls": "",
-        "x": 350,
-        "y": 460,
+        "x": 290,
+        "y": 520,
         "wires": [
             [
-                "d5bf0471.4e7398"
+                "db28f468.ffe858"
             ]
         ]
     },
     {
-        "id": "e8203974.973d88",
+        "id": "da1a2e5e.d703e",
         "type": "function",
-        "z": "7b27f69f.de9e48",
+        "z": "aa6d66c7.f71658",
         "name": "set url",
-        "func": "var newMsg = {\n  url: context.global.ekispertWebServiceEndpoint + \"/v1/json/station/timetable?key=\" + context.global.ekispertWebServiceKey + \"&stationCode=\" + context.global.stationCode + \"&code=1\"\n};\nreturn newMsg;",
+        "func": "var newMsg = {\n  url: context.global.ekispertWebServiceEndpoint + \"/v1/json/search/multipleRange?key=\" + context.global.ekispertWebServiceKey + \"&baseList=\" + context.global.stationCode + \"&upperMinute=\" + context.global.upperMinute \n};\nconsole.log(newMsg.url);\nreturn newMsg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 190,
-        "y": 460,
+        "x": 110,
+        "y": 520,
         "wires": [
             [
-                "e8aeb0ed.6f51f"
+                "fcecc9d.831a638"
             ]
         ]
     },
     {
-        "id": "a7998355.a6f16",
-        "type": "http request",
-        "z": "7b27f69f.de9e48",
-        "name": "get timetable",
-        "method": "GET",
-        "ret": "obj",
-        "url": "",
-        "tls": "",
-        "x": 670,
-        "y": 460,
-        "wires": [
-            [
-                "21220bdf.3d2194"
-            ]
-        ]
-    },
-    {
-        "id": "d5bf0471.4e7398",
+        "id": "db28f468.ffe858",
         "type": "function",
-        "z": "7b27f69f.de9e48",
-        "name": "set url",
-        "func": "var newMsg = {\n  url: context.global.ekispertWebServiceEndpoint + \"/v1/json/station/timetable?key=\" + context.global.ekispertWebServiceKey + \"&stationCode=\" + context.global.stationCode + \"&code=1\",\n};\nreturn newMsg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 510,
-        "y": 460,
-        "wires": [
-            [
-                "a7998355.a6f16"
-            ]
-        ]
-    },
-    {
-        "id": "21220bdf.3d2194",
-        "type": "function",
-        "z": "7b27f69f.de9e48",
+        "z": "aa6d66c7.f71658",
         "name": "format message",
-        "func": "console.log(JSON.stringify(msg.payload.ResultSet));\nvar hourTable = msg.payload.ResultSet.TimeTable.HourTable;\nvar times = [];\nvar displayTimes = [];\nvar stationName = msg.payload.ResultSet.TimeTable.Station.Name;\nvar lineName = msg.payload.ResultSet.TimeTable.Line.Name;\nvar direction = msg.payload.ResultSet.TimeTable.Line.Direction;\nvar minuteAfter = 20;\n\n// 現在時刻の取得\nvar now = new Date();\n\n// 現在時刻から○分後の時刻を取得\nvar timeAfter = new Date();\ntimeAfter.setMinutes(timeAfter.getMinutes() + minuteAfter);\n\n// 時刻表をtimes変数に格納\nfor(var i = 0; i < hourTable.length; i++ ) {\n  for(var j = 0; j < hourTable[i].MinuteTable.length; j++) {\n    times.push(new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourTable[i].Hour, hourTable[i].MinuteTable[j].Minute));\n  }\n}\n\n// 現在時刻から○分以内の時刻のみ抽出\nfor(var i = 0; i < times.length; i++) {\n  if(now < times[i] && times[i] < timeAfter) {\n    displayTimes.push(times[i]);\n  }\n}\n\nvar slackMessage = `${lineName} ${stationName}の電車を調べたよ!\\n■${direction} 方面\\n${displayTimes.join(\"\\n\")}`;\n\nvar newMsg = {\n  payload: slackMessage,\n  channelURL: context.global.WebHookURL\n};\nreturn newMsg;",
+        "func": "\nvar points = msg.payload.ResultSet.Point;\n\nif(!Array.isArray(points)){\n  points = [points];\n}\n\nvar displayStations = [];\n\nfor(var i = 0; i < points.length; i++) {\n  displayStations.push(\"・\" + points[i].Station.Name + \"駅 \" + points[i].Cost.Minute + \"分 乗換\" + points[i].Cost.TransferCount + \"回\");\n}\n\nvar slackMessage = `気分転換にお出かけでもどう？\\n${context.global.stationName}から${context.global.upperMinute}分で行ける駅を調べたよ!\\n${displayStations.join(\"\\n\")}`;\n\nvar newMsg = {\n  payload: slackMessage,\n  channelURL: context.global.WebHookURL\n};\nreturn newMsg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 860,
-        "y": 460,
+        "x": 500,
+        "y": 520,
         "wires": [
             [
-                "8b442f82.cd2c5",
-                "45fb5f77.0bc72"
+                "648eeb37.50ab74",
+                "d50be3a0.c2b8f"
             ]
         ]
     },
     {
-        "id": "8b442f82.cd2c5",
+        "id": "648eeb37.50ab74",
         "type": "slack",
-        "z": "7b27f69f.de9e48",
+        "z": "aa6d66c7.f71658",
         "name": "",
         "channelURL": "",
         "username": "",
         "emojiIcon": "",
         "channel": "",
-        "x": 1030,
-        "y": 460,
+        "x": 690,
+        "y": 520,
         "wires": []
     },
     {
-        "id": "8bd343bb.94929",
-        "type": "comment",
-        "z": "7b27f69f.de9e48",
-        "name": "時刻表取得",
-        "info": "",
-        "x": 200,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "45fb5f77.0bc72",
+        "id": "d50be3a0.c2b8f",
         "type": "debug",
-        "z": "7b27f69f.de9e48",
+        "z": "aa6d66c7.f71658",
         "name": "",
         "active": true,
         "console": "false",
         "complete": "false",
-        "x": 1050,
+        "x": 710,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "f381e152.e091b",
+        "type": "inject",
+        "z": "aa6d66c7.f71658",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "x": 130,
+        "y": 380,
+        "wires": [
+            [
+                "627e6be7.7653c4"
+            ]
+        ]
+    },
+    {
+        "id": "b95840cc.8ae37",
+        "type": "switch",
+        "z": "aa6d66c7.f71658",
+        "name": "湿度が◯◯度以上・以下だったら",
+        "property": "humi",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "10",
+                "vt": "num"
+            },
+            {
+                "t": "gt",
+                "v": "70",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 680,
+        "y": 380,
+        "wires": [
+            [
+                "98628593.e4fc08",
+                "da1a2e5e.d703e"
+            ],
+            [
+                "98628593.e4fc08",
+                "da1a2e5e.d703e"
+            ]
+        ]
+    },
+    {
+        "id": "a77de43e.220848",
+        "type": "slack",
+        "z": "aa6d66c7.f71658",
+        "name": "",
+        "channelURL": "",
+        "username": "",
+        "emojiIcon": "",
+        "channel": "",
+        "x": 890,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "98628593.e4fc08",
+        "type": "function",
+        "z": "aa6d66c7.f71658",
+        "name": "create slack message",
+        "func": "var slackMessage = `部屋の環境がよろしくないみたい！\\n温度：${context.global.temp}\\n湿度：${context.global.humi}`;\n\nvar newMsg = {\n  payload: slackMessage,\n  channelURL: context.global.WebHookURL\n};\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 460,
+        "wires": [
+            [
+                "a77de43e.220848",
+                "2745566e.f5dbda"
+            ]
+        ]
+    },
+    {
+        "id": "2745566e.f5dbda",
+        "type": "debug",
+        "z": "aa6d66c7.f71658",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 910,
         "y": 500,
         "wires": []
     },
     {
-        "id": "9a51fb2e.9278c8",
-        "type": "websocket-client",
-        "z": "",
-        "path": "wss://api.sakura.io/ws/v1/",
-        "wholemsg": "false"
+        "id": "627e6be7.7653c4",
+        "type": "switch",
+        "z": "aa6d66c7.f71658",
+        "name": "温度が◯◯度以上・以下だったら",
+        "property": "temp",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "10",
+                "vt": "num"
+            },
+            {
+                "t": "gt",
+                "v": "25",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 360,
+        "y": 380,
+        "wires": [
+            [
+                "b95840cc.8ae37"
+            ],
+            [
+                "b95840cc.8ae37"
+            ]
+        ]
+    },
+    {
+        "id": "bfb79efb.5e02b",
+        "type": "comment",
+        "z": "aa6d66c7.f71658",
+        "name": "sakura.ioからデータ取得",
+        "info": "",
+        "x": 150,
+        "y": 240,
+        "wires": []
     }
 ]
