@@ -73,7 +73,7 @@
         "type": "function",
         "z": "776a234b.b478cc",
         "name": "set station",
-        "func": "context.global.stationName = msg.payload.ResultSet.Point.Station.Name;\ncontext.global.stationCode = msg.payload.ResultSet.Point.Station.code;\n\nreturn {\n  payload: {\n    stationName: context.global.stationName,\n    stationCode: context.global.stationCode\n  }\n};",
+        "func": "var points = msg.payload.ResultSet.Point;\nif(!Array.isArray(points))\n{\n  points = [points];}\n\ncontext.global.stationName = points[0].Station.Name;\ncontext.global.stationCode = points[0].Station.code;\n\nreturn {\n  payload: {\n    stationName: context.global.stationName,\n    stationCode: context.global.stationCode\n  }\n};",
         "outputs": 1,
         "noerr": 0,
         "x": 850,
