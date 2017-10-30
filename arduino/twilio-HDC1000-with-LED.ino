@@ -82,7 +82,7 @@ void loop() {
       uint8_t ch, type, value[8];
       int64_t offset;
       sakuraio.dequeueRx(&ch, &type, value, &offset);
-      if (ch == 0) {
+      if (ch == 1) {
         if (value[0] == 1) {
           digitalWrite(LED_1, HIGH);
         } else {

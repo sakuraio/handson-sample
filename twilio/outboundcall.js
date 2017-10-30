@@ -6,7 +6,6 @@ PATH : /outbound-call
 ACCESS CONTROL ： チェックなし
 EVENT ： 指定なし
 */
-
 exports.handler = function(context, event, callback) {
   // 受信したJSONデータに含まれるモジュールIDと、Functionsで指定した環境変数（MODULE_ID）を照合
   var moduleId = event.module || '';
