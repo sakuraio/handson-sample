@@ -2,12 +2,16 @@
 このプログラムはsakura.ioとTwilioとのコラボハンズオンにおいて、Twilio Functionsと連携させるためのものです。
 ivrプログラムより本プログラムを実行することで、sakura.ioで生成したIncoming WebhookのURL（SAKURA_URL）に対して指定したJSONデータを送信します。
 パラメータは以下のように指定します。
-PATH : /turn-off
+PATH : /turn
 ACCESS CONTROL ： チェックなし
 EVENT ： 指定なし
 */
-
 exports.handler = function(context, event, callback) {
+    // switchパラメータで、エアコンのOnとOffを制御
+    const sw = event.switch || 'off'
+    const value = ( sw === 'on' ? 1 : 0 )
+    const message = ( sw === 'on' ? 'エアコンをつけました' : 'エアコンを消しました' )
+  
     // 返送するJSONデータの指定（ヘッダおよびMODULE_IDを含むボディ）
     const got = require('got')
     const headers = JSON.stringify({
@@ -19,9 +23,9 @@ exports.handler = function(context, event, callback) {
       "module": context.MODULE_ID,
       "payload": {
         "channels": [{
-          "channel": 0,
+          "channel": 1,
           "type": "i",
-          "value": 0
+          "value": value
         }]
       }
     })
@@ -42,11 +46,11 @@ exports.handler = function(context, event, callback) {
     // 成功した場合の挙動の指定
     .then(response => {
       console.log(response)
-      twiml.say(sayParam, 'エアコンを消しました')
+      twiml.say(sayParam, message)
       twiml.hangup()
       callback(null, twiml)
     })
-    // エラーが発生した場合の挙動の指定
+    // 失敗した場合の挙動の指定
     .catch(error => {
       console.log(error)
       twiml.say(sayParam, 'エラーが発生しました')
