@@ -193,7 +193,7 @@
         "type": "function",
         "z": "ef03a1a3.5e54d",
         "name": "メッセージ化",
-        "func": "msg.payload = 'BMXUGとさくらインターネットのハンズオンで温度情報を取得中！ただ今の現地温度は'+msg.payload+'度だよ。資料はhttps://goo.gl/qGPjJnです！今後ともよろしくお願いします！ #bluemix #bmxug #sakuraio #さくらインターネット';return msg;",
+        "func": "msg.payload = 'BMXUGとさくらインターネットのハンズオンで温度情報を取得中！ただ今の現地温度は'+msg.payload+'度だよ。資料は https://goo.gl/oZ94or です！今後ともよろしくお願いします！ #bluemix #bmxug #sakuraio #さくらインターネット';return msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 860,
