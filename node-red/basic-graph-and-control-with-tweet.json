@@ -1,0 +1,778 @@
+[
+    {
+        "id": "be8dba1c.f5ee28",
+        "type": "tab",
+        "label": "グラフ＆制御＆Twitter投稿（温度）",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "10fd8dff.bff452",
+        "type": "websocket in",
+        "z": "be8dba1c.f5ee28",
+        "name": "sakuraio-websocket",
+        "server": "",
+        "client": "4c1e347a.f0b7ec",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "7117f0bb.55dac",
+                "cad3f227.ce955"
+            ]
+        ]
+    },
+    {
+        "id": "7117f0bb.55dac",
+        "type": "json",
+        "z": "be8dba1c.f5ee28",
+        "name": "String→Objectへの変換",
+        "pretty": false,
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "7f7d09b9.8dddc8"
+            ]
+        ]
+    },
+    {
+        "id": "7f7d09b9.8dddc8",
+        "type": "switch",
+        "z": "be8dba1c.f5ee28",
+        "name": "Type＝Channelsだけ通過",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "channels",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 1,
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "55d8c16c.5e61f",
+                "6294981.d274168"
+            ]
+        ]
+    },
+    {
+        "id": "55d8c16c.5e61f",
+        "type": "function",
+        "z": "be8dba1c.f5ee28",
+        "name": "Channel0(temp) parse",
+        "func": "msg.payload = Math.round(msg.payload.payload.channels[0].value*10)/10;return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 440,
+        "y": 200,
+        "wires": [
+            [
+                "f90c4ccb.ef6f2",
+                "e477cd96.d5dad",
+                "3d8effde.59d32",
+                "d8dae6f1.8f8678"
+            ]
+        ]
+    },
+    {
+        "id": "e477cd96.d5dad",
+        "type": "ui_chart",
+        "z": "be8dba1c.f5ee28",
+        "name": "温度推移",
+        "group": "489b7d7f.541734",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "label": "温度 (30分)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 680,
+        "y": 280,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "f90c4ccb.ef6f2",
+        "type": "ui_gauge",
+        "z": "be8dba1c.f5ee28",
+        "name": "温度",
+        "group": "489b7d7f.541734",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "gtype": "gage",
+        "title": "現在の温度",
+        "label": "℃",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "40",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "30",
+        "seg2": "32",
+        "x": 670,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3d8effde.59d32",
+        "type": "debug",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 690,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "6294981.d274168",
+        "type": "function",
+        "z": "be8dba1c.f5ee28",
+        "name": "Channel1(humi) parse",
+        "func": "msg.payload = Math.round(msg.payload.payload.channels[1].value*10)/10;return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 440,
+        "y": 400,
+        "wires": [
+            [
+                "2513a836.130e38",
+                "9b24d9d7.7877b8",
+                "c42b659e.d777c8"
+            ]
+        ]
+    },
+    {
+        "id": "baaee7e7.8d4738",
+        "type": "debug",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 1050,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "19f51216.68fe4e",
+        "type": "function",
+        "z": "be8dba1c.f5ee28",
+        "name": "メッセージ化",
+        "func": "msg.payload = 'さくらインターネットのハンズオンで温度情報を取得中！ただ今の現地温度は'+msg.payload+'度だよ。資料は https://goo.gl/QzJ9bv です！今後ともよろしくお願いします！ #sakuraio #さくらインターネット';return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 340,
+        "wires": [
+            [
+                "baaee7e7.8d4738",
+                "ae4e05df.d99388"
+            ]
+        ]
+    },
+    {
+        "id": "d8dae6f1.8f8678",
+        "type": "trigger",
+        "z": "be8dba1c.f5ee28",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "10",
+        "extend": false,
+        "units": "min",
+        "reset": "",
+        "name": "",
+        "x": 690,
+        "y": 340,
+        "wires": [
+            [
+                "19f51216.68fe4e"
+            ]
+        ]
+    },
+    {
+        "id": "2513a836.130e38",
+        "type": "debug",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 690,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "9b24d9d7.7877b8",
+        "type": "ui_gauge",
+        "z": "be8dba1c.f5ee28",
+        "name": "湿度",
+        "group": "f04be081.6fdb7",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "gtype": "gage",
+        "title": "現在の湿度",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 670,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "c42b659e.d777c8",
+        "type": "ui_chart",
+        "z": "be8dba1c.f5ee28",
+        "name": "湿度推移",
+        "group": "f04be081.6fdb7",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "label": "湿度 (30分)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 680,
+        "y": 480,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "35c28bde.5b96b4",
+        "type": "comment",
+        "z": "be8dba1c.f5ee28",
+        "name": "グラフ＆制御＆Twitter投稿（温度）サンプル",
+        "info": "本フローはsakura.ioハンズオンで利用する、Arduino Unoと温湿度センサ（HDC1000 or SHT31）を用いたグラフ表示とTwitter連携を試すものです。\n\nsakura.ioのWebSocket`wss://api.sakura.io/ws/v1/.....`サービスから送信されたJSONデータから温度（Channel0）を取り出し、指定したTwittter IDを用いてTwitterにメッセージを投稿します。\n\nまたグラフ表示は`http://<IPアドレス>:<指定したWeb UIポート番号>/ui/`で確認することができます。\n\nハンズオンでの内容に加えて、本サンプルではボタンによる制御信号の送信を追加しています。\n\n> [sakura.io コントロールパネル](https://secure.sakura.ad.jp/iot/)\n\n> [利用Arduinoスケッチ（温湿度センサHDC1000を利用する場合）](https://github.com/sakuraio/handson-sample/blob/master/arduino/basic-HDC1000-with-LED.ino)\n\n> [利用Arduinoスケッチ（温湿度センサSHT31を利用する場合）](https://github.com/sakuraio/handson-sample/blob/master/arduino/basic-SHT31-with-LED.ino)\n\n> [参考ハンズオン資料](https://www.slideshare.net/sakura_pr/sakuraio-handson)",
+        "x": 190,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "d239ba42.785b88",
+        "type": "ui_button",
+        "z": "be8dba1c.f5ee28",
+        "name": "LED-RED-on",
+        "group": "ed7b9275.365d2",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "RED on",
+        "color": "",
+        "bgcolor": "red",
+        "icon": "",
+        "payload": "{\"module\":\"%%moduleID%%\",\"type\":\"channels\",\"payload\":{\"channels\":[{\"channel\":0,\"type\":\"I\",\"value\":1}]}}",
+        "payloadType": "json",
+        "topic": "",
+        "x": 310,
+        "y": 580,
+        "wires": [
+            [
+                "941756c5.b03d38",
+                "d5421e1f.d379f"
+            ]
+        ]
+    },
+    {
+        "id": "cad3f227.ce955",
+        "type": "debug",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 190,
+        "y": 158.8888750076294,
+        "wires": []
+    },
+    {
+        "id": "941756c5.b03d38",
+        "type": "websocket out",
+        "z": "be8dba1c.f5ee28",
+        "name": "sakuraio-websocket",
+        "server": "",
+        "client": "4c1e347a.f0b7ec",
+        "x": 600,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "d5421e1f.d379f",
+        "type": "debug",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 570,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "fbd6c579.df3468",
+        "type": "ui_button",
+        "z": "be8dba1c.f5ee28",
+        "name": "LED-GREEN-on",
+        "group": "ed7b9275.365d2",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "GREEN on",
+        "color": "",
+        "bgcolor": "limegreen",
+        "icon": "",
+        "payload": "{\"module\":\"%%moduleID%%\",\"type\":\"channels\",\"payload\":{\"channels\":[{\"channel\":1,\"type\":\"I\",\"value\":1}]}}",
+        "payloadType": "json",
+        "topic": "",
+        "x": 320,
+        "y": 620,
+        "wires": [
+            [
+                "941756c5.b03d38",
+                "d5421e1f.d379f"
+            ]
+        ]
+    },
+    {
+        "id": "4a6953b5.ef2b6c",
+        "type": "ui_button",
+        "z": "be8dba1c.f5ee28",
+        "name": "LED-BLUE-on",
+        "group": "ed7b9275.365d2",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "BLUE on",
+        "color": "",
+        "bgcolor": "blue",
+        "icon": "",
+        "payload": "{\"module\":\"%%moduleID%%\",\"type\":\"channels\",\"payload\":{\"channels\":[{\"channel\":2,\"type\":\"I\",\"value\":1}]}}",
+        "payloadType": "json",
+        "topic": "",
+        "x": 320,
+        "y": 660,
+        "wires": [
+            [
+                "941756c5.b03d38",
+                "d5421e1f.d379f"
+            ]
+        ]
+    },
+    {
+        "id": "adc784c1.d53218",
+        "type": "ui_button",
+        "z": "be8dba1c.f5ee28",
+        "name": "LED-RED-off",
+        "group": "ed7b9275.365d2",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "RED off",
+        "color": "",
+        "bgcolor": "tan",
+        "icon": "",
+        "payload": "{\"module\":\"%%moduleID%%\",\"type\":\"channels\",\"payload\":{\"channels\":[{\"channel\":0,\"type\":\"I\",\"value\":0}]}}",
+        "payloadType": "json",
+        "topic": "",
+        "x": 310,
+        "y": 700,
+        "wires": [
+            [
+                "941756c5.b03d38",
+                "d5421e1f.d379f"
+            ]
+        ]
+    },
+    {
+        "id": "2316457e.14dbfa",
+        "type": "ui_button",
+        "z": "be8dba1c.f5ee28",
+        "name": "LED-GREEN-off",
+        "group": "ed7b9275.365d2",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "GREEN off",
+        "color": "",
+        "bgcolor": "darkseagreen",
+        "icon": "",
+        "payload": "{\"module\":\"%%moduleID%%\",\"type\":\"channels\",\"payload\":{\"channels\":[{\"channel\":1,\"type\":\"I\",\"value\":0}]}}",
+        "payloadType": "json",
+        "topic": "",
+        "x": 320,
+        "y": 740,
+        "wires": [
+            [
+                "941756c5.b03d38",
+                "d5421e1f.d379f"
+            ]
+        ]
+    },
+    {
+        "id": "bf476ce1.60f96",
+        "type": "ui_button",
+        "z": "be8dba1c.f5ee28",
+        "name": "LED-BLUE-off",
+        "group": "ed7b9275.365d2",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "BLUE off",
+        "color": "",
+        "bgcolor": "lightskyblue",
+        "icon": "",
+        "payload": "{\"module\":\"%%moduleID%%\",\"type\":\"channels\",\"payload\":{\"channels\":[{\"channel\":2,\"type\":\"I\",\"value\":0}]}}",
+        "payloadType": "json",
+        "topic": "",
+        "x": 320,
+        "y": 780,
+        "wires": [
+            [
+                "941756c5.b03d38",
+                "d5421e1f.d379f"
+            ]
+        ]
+    },
+    {
+        "id": "c36da2a9.ad772",
+        "type": "ui_button",
+        "z": "be8dba1c.f5ee28",
+        "name": "LED-ALL-on",
+        "group": "ed7b9275.365d2",
+        "order": 0,
+        "width": "4",
+        "height": "2",
+        "passthru": true,
+        "label": "ALL on",
+        "color": "",
+        "bgcolor": "gold",
+        "icon": "",
+        "payload": "{\"module\":\"%%moduleID%%\",\"type\":\"channels\",\"payload\":{\"channels\":[{\"channel\":0,\"type\":\"I\",\"value\":1},{\"channel\":1,\"type\":\"I\",\"value\":1},{\"channel\":2,\"type\":\"I\",\"value\":1}]}}",
+        "payloadType": "json",
+        "topic": "",
+        "x": 310,
+        "y": 820,
+        "wires": [
+            [
+                "941756c5.b03d38",
+                "d5421e1f.d379f"
+            ]
+        ]
+    },
+    {
+        "id": "92aadfa.de0632",
+        "type": "ui_button",
+        "z": "be8dba1c.f5ee28",
+        "name": "LED-ALL-off",
+        "group": "ed7b9275.365d2",
+        "order": 0,
+        "width": "4",
+        "height": "2",
+        "passthru": true,
+        "label": "ALL off",
+        "color": "",
+        "bgcolor": "gray",
+        "icon": "",
+        "payload": "{\"module\":\"%%moduleID%%\",\"type\":\"channels\",\"payload\":{\"channels\":[{\"channel\":0,\"type\":\"I\",\"value\":0},{\"channel\":1,\"type\":\"I\",\"value\":0},{\"channel\":2,\"type\":\"I\",\"value\":0}]}}",
+        "payloadType": "json",
+        "topic": "",
+        "x": 310,
+        "y": 860,
+        "wires": [
+            [
+                "941756c5.b03d38",
+                "d5421e1f.d379f"
+            ]
+        ]
+    },
+    {
+        "id": "349113e0.17d22c",
+        "type": "comment",
+        "z": "be8dba1c.f5ee28",
+        "name": "デバイスの制御サンプル",
+        "info": "",
+        "x": 130,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "e80d1f79.31f25",
+        "type": "inject",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 580,
+        "wires": [
+            [
+                "d239ba42.785b88"
+            ]
+        ]
+    },
+    {
+        "id": "48bc535f.fdd36c",
+        "type": "inject",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 620,
+        "wires": [
+            [
+                "fbd6c579.df3468"
+            ]
+        ]
+    },
+    {
+        "id": "935d2ea3.364",
+        "type": "inject",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 660,
+        "wires": [
+            [
+                "4a6953b5.ef2b6c"
+            ]
+        ]
+    },
+    {
+        "id": "c2014ad3.ad1fa8",
+        "type": "inject",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 700,
+        "wires": [
+            [
+                "adc784c1.d53218"
+            ]
+        ]
+    },
+    {
+        "id": "8cb1556.79d47a8",
+        "type": "inject",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 740,
+        "wires": [
+            [
+                "2316457e.14dbfa"
+            ]
+        ]
+    },
+    {
+        "id": "6e4be7e.ba08f18",
+        "type": "inject",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 780,
+        "wires": [
+            [
+                "bf476ce1.60f96"
+            ]
+        ]
+    },
+    {
+        "id": "f1a55df.1d16aa",
+        "type": "inject",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 820,
+        "wires": [
+            [
+                "c36da2a9.ad772"
+            ]
+        ]
+    },
+    {
+        "id": "d3256e69.6be9c",
+        "type": "inject",
+        "z": "be8dba1c.f5ee28",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 120,
+        "y": 860,
+        "wires": [
+            [
+                "92aadfa.de0632"
+            ]
+        ]
+    },
+    {
+        "id": "ae4e05df.d99388",
+        "type": "twitter out",
+        "z": "be8dba1c.f5ee28",
+        "twitter": "",
+        "name": "Tweet",
+        "x": 1030,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "4c1e347a.f0b7ec",
+        "type": "websocket-client",
+        "z": "",
+        "path": "wss://api.sakura.io/ws/v1/",
+        "wholemsg": "false"
+    },
+    {
+        "id": "489b7d7f.541734",
+        "type": "ui_group",
+        "z": "",
+        "name": "温度",
+        "tab": "fe815e01.07ba8",
+        "order": 1,
+        "disp": true,
+        "width": "8"
+    },
+    {
+        "id": "f04be081.6fdb7",
+        "type": "ui_group",
+        "z": "",
+        "name": "湿度",
+        "tab": "fe815e01.07ba8",
+        "order": 2,
+        "disp": true,
+        "width": "8"
+    },
+    {
+        "id": "ed7b9275.365d2",
+        "type": "ui_group",
+        "z": "",
+        "name": "Control",
+        "tab": "fe815e01.07ba8",
+        "disp": true,
+        "width": "4"
+    },
+    {
+        "id": "fe815e01.07ba8",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Handson",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
