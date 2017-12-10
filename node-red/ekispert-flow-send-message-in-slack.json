@@ -1,59 +1,59 @@
 [
     {
-        "id": "ffb7182e.9bb35",
+        "id": "84103d1e.fa462",
         "type": "comment",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "駅すぱあと範囲探索&slack投稿",
         "info": "",
         "x": 150,
-        "y": 40,
+        "y": 160,
         "wires": []
     },
     {
-        "id": "a97c227b.fcf79",
+        "id": "eb9d881d.a4a53",
         "type": "function",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "parse",
         "func": "var points = msg.payload.ResultSet.Point;\n\nif(!Array.isArray(points)){\n  points = [points];\n}\n\nvar displayStations = [];\n\nfor(var i = 0; i < points.length; i++) {\n  displayStations.push(\"・\" + points[i].Station.Name + \"駅 \" + points[i].Cost.Minute + \"分 乗換\" + points[i].Cost.TransferCount + \"回\");\n}\n\nvar newMsg = {\n  payload: displayStations.join(\"\\n\")\n};\nreturn newMsg;",
         "outputs": 1,
         "noerr": 0,
         "x": 410,
-        "y": 240,
+        "y": 360,
         "wires": [
             [
-                "cd5e22f4.8b64f8"
+                "1387e7b0.a4f43"
             ]
         ]
     },
     {
-        "id": "87d1bcf5.e02bc",
+        "id": "b4e9f326.2fbc78",
         "type": "slack",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "",
         "channelURL": "",
         "username": "",
         "emojiIcon": "",
         "channel": "",
         "x": 750,
-        "y": 240,
+        "y": 360,
         "wires": []
     },
     {
-        "id": "7307858f.0a9fdc",
+        "id": "93517712.9b1d9",
         "type": "debug",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "",
         "active": true,
         "console": "false",
         "complete": "false",
         "x": 770,
-        "y": 280,
+        "y": 400,
         "wires": []
     },
     {
-        "id": "a3c33e51.a821a",
+        "id": "5186fc97.0e73c4",
         "type": "inject",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "",
         "topic": "",
         "payload": "",
@@ -62,17 +62,17 @@
         "crontab": "",
         "once": false,
         "x": 110,
-        "y": 80,
+        "y": 200,
         "wires": [
             [
-                "19360c61.795874"
+                "fff1b367.e792f"
             ]
         ]
     },
     {
-        "id": "10ed077.ccf08f9",
+        "id": "e4eeae19.3a0208",
         "type": "switch",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "湿度が◯◯度以上・以下だったら",
         "property": "humi",
         "propertyType": "global",
@@ -90,48 +90,48 @@
         ],
         "checkall": "true",
         "outputs": 2,
-        "x": 660,
-        "y": 80,
+        "x": 680,
+        "y": 200,
         "wires": [
             [
-                "ccdb6335.549db",
-                "d93f8e7b.d2665"
+                "482d8d9b.c93bcc",
+                "9fb9a9d2.015658"
             ],
             [
-                "ccdb6335.549db",
-                "d93f8e7b.d2665"
+                "482d8d9b.c93bcc",
+                "9fb9a9d2.015658"
             ]
         ]
     },
     {
-        "id": "f0f0f2e6.56d12",
+        "id": "aa800f24.391f5",
         "type": "slack",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "",
         "channelURL": "",
         "username": "",
         "emojiIcon": "",
         "channel": "",
         "x": 930,
-        "y": 160,
+        "y": 280,
         "wires": []
     },
     {
-        "id": "1c0ea8a1.26cd77",
+        "id": "b2c5f5d0.d107c8",
         "type": "debug",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "",
         "active": true,
         "console": "false",
         "complete": "false",
         "x": 950,
-        "y": 200,
+        "y": 320,
         "wires": []
     },
     {
-        "id": "19360c61.795874",
+        "id": "fff1b367.e792f",
         "type": "switch",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "温度が◯◯度以上・以下だったら",
         "property": "temp",
         "propertyType": "global",
@@ -149,21 +149,21 @@
         ],
         "checkall": "true",
         "outputs": 2,
-        "x": 340,
-        "y": 80,
+        "x": 360,
+        "y": 200,
         "wires": [
             [
-                "10ed077.ccf08f9"
+                "e4eeae19.3a0208"
             ],
             [
-                "10ed077.ccf08f9"
+                "e4eeae19.3a0208"
             ]
         ]
     },
     {
-        "id": "50a0fdf1.253bfc",
+        "id": "347178d2.c477b",
         "type": "search range",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "",
         "accessKey": "",
         "baseList": "",
@@ -174,46 +174,46 @@
         "limitedExpress": "",
         "limit": "",
         "x": 250,
-        "y": 240,
+        "y": 360,
         "wires": [
             [
-                "a97c227b.fcf79",
-                "f739744b.bfc28"
+                "eb9d881d.a4a53",
+                "799e42b5.1d9d24"
             ]
         ]
     },
     {
-        "id": "f739744b.bfc28",
+        "id": "799e42b5.1d9d24",
         "type": "debug",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "",
         "active": true,
         "console": "false",
         "complete": "payload",
         "x": 430,
-        "y": 280,
+        "y": 400,
         "wires": []
     },
     {
-        "id": "ccdb6335.549db",
+        "id": "482d8d9b.c93bcc",
         "type": "function",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "parse",
         "func": "var msg = {\n    baseList: context.global.stationName\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 90,
-        "y": 240,
+        "y": 360,
         "wires": [
             [
-                "50a0fdf1.253bfc"
+                "347178d2.c477b"
             ]
         ]
     },
     {
-        "id": "d93f8e7b.d2665",
+        "id": "9fb9a9d2.015658",
         "type": "template",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "Slack Message",
         "field": "payload",
         "fieldType": "msg",
@@ -222,18 +222,18 @@
         "template": "部屋の環境がよろしくないみたい！\n温度：{{global.temp}}\n湿度：{{global.humi}}",
         "output": "str",
         "x": 760,
-        "y": 160,
+        "y": 280,
         "wires": [
             [
-                "f0f0f2e6.56d12",
-                "1c0ea8a1.26cd77"
+                "aa800f24.391f5",
+                "b2c5f5d0.d107c8"
             ]
         ]
     },
     {
-        "id": "cd5e22f4.8b64f8",
+        "id": "1387e7b0.a4f43",
         "type": "template",
-        "z": "1d0acc2a.5b396c",
+        "z": "5d2412.b623bbf",
         "name": "Slack Message",
         "field": "payload",
         "fieldType": "msg",
@@ -242,12 +242,103 @@
         "template": "気分転換にお出かけでもどう？\n{{global.stationName}}から行ける駅を調べたよ!\n{{payload}}",
         "output": "str",
         "x": 580,
-        "y": 240,
+        "y": 360,
         "wires": [
             [
-                "7307858f.0a9fdc",
-                "87d1bcf5.e02bc"
+                "93517712.9b1d9",
+                "b4e9f326.2fbc78"
             ]
         ]
+    },
+    {
+        "id": "41856c56.57fc1c",
+        "type": "websocket in",
+        "z": "5d2412.b623bbf",
+        "name": "sakuraio-websocket",
+        "server": "",
+        "client": "",
+        "x": 110,
+        "y": 80,
+        "wires": [
+            [
+                "88d5dfc8.785e6"
+            ]
+        ]
+    },
+    {
+        "id": "88d5dfc8.785e6",
+        "type": "json",
+        "z": "5d2412.b623bbf",
+        "name": "String→Objectへの変換",
+        "pretty": false,
+        "x": 350,
+        "y": 80,
+        "wires": [
+            [
+                "92967675.b774c"
+            ]
+        ]
+    },
+    {
+        "id": "92967675.b774c",
+        "type": "switch",
+        "z": "5d2412.b623bbf",
+        "name": "Type＝Channelsだけ通過",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "channels",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 1,
+        "x": 610,
+        "y": 80,
+        "wires": [
+            [
+                "189ce21f.9662de"
+            ]
+        ]
+    },
+    {
+        "id": "189ce21f.9662de",
+        "type": "function",
+        "z": "5d2412.b623bbf",
+        "name": "temp&humi parse",
+        "func": "// 温度をグローバル変数に代入\ncontext.global.temp = Math.round(msg.payload.payload.channels[0].value*10)/10;\n\n// 湿度をグローバル変数に代入\ncontext.global.humi = Math.round(msg.payload.payload.channels[1].value*10)/10;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 850,
+        "y": 80,
+        "wires": [
+            [
+                "f1d66096.c0b56"
+            ]
+        ]
+    },
+    {
+        "id": "f1d66096.c0b56",
+        "type": "debug",
+        "z": "5d2412.b623bbf",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 1050,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "33c4e61a.f56c12",
+        "type": "comment",
+        "z": "5d2412.b623bbf",
+        "name": "sakura.ioからデータ取得",
+        "info": "",
+        "x": 130,
+        "y": 40,
+        "wires": []
     }
 ]
