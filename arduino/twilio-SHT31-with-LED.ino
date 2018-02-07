@@ -1,9 +1,11 @@
 // ヘッダファイル指定　Including header files
-#include "Adafruit_SHT31.h"
+#include <Adafruit_SHT31.h>
 #include <SakuraIO.h>
 
 // LEDの定義　Definition of LED
 #define LED_1 7
+#define LED_2 6
+#define LED_3 5
 
 // 変数の定義　Definition of variables
 SakuraIO_I2C sakuraio;
@@ -25,6 +27,8 @@ void setup() {
   }
   Serial.println("");
   pinMode(LED_1, OUTPUT);
+  pinMode(LED_2, OUTPUT);
+  pinMode(LED_3, OUTPUT);
 }
 
 // 以下ループ実行　Loop execution
@@ -55,9 +59,16 @@ void loop() {
     // キューイングされた値の送信　Sending queued values
     sakuraio.send();
     Serial.println("* Sent to sakura.io *");
-    delay(10000); // 送信後の待機時間
+    for (int i = 0; i < 10; i++) // 送信時にLED_3を10回点滅　LED_3 blinks 10 times during transmission
+    {
+      digitalWrite(LED_3, HIGH);
+      delay(1000);
+      digitalWrite(LED_3, LOW);
+      delay(1000);
+    }
+    delay(10000); // 送信後の待機時間　Wait time after transmission
   } else {
-    delay(1000); // 送信を行わない場合の計測周期
+    delay(1000); // 送信を行わない場合の計測周期　Measurement cycle when transmission is not performed
   }
 
   // 利用可能な領域（Available）とデータが格納された領域（Queued）の取得　Get Available and Queued
@@ -84,15 +95,21 @@ void loop() {
       uint8_t ch, type, value[8];
       int64_t offset;
       sakuraio.dequeueRx(&ch, &type, value, &offset);
-      if (ch == 1) {
+      if (ch == 0) { // ch0への受信時の動作定義　Definition of operation upon reception on ch0
         if (value[0] == 1) {
           digitalWrite(LED_1, HIGH);
         } else {
           digitalWrite(LED_1, LOW);
         }
+      } else if (ch == 1) { // ch1への受信時の定義　Definition of operation upon reception on ch1
+
+        if (value[0] == 1) {
+          digitalWrite(LED_2, HIGH);
+        } else {
+          digitalWrite(LED_2, LOW);
+        }
       }
     }
     sakuraio.clearRx();
   }
-
 }
