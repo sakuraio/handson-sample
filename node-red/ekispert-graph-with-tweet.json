@@ -1,0 +1,376 @@
+[
+    {
+        "id": "7cf29ec2.c2e5a",
+        "type": "tab",
+        "label": "グラフ表示",
+        "disabled": false,
+        "info": "本フローはsakura.ioハンズオンで利用する、Arduino Unoと温湿度センサ（HDC1000 or SHT31）を用いたグラフ表示とTwitter連携を試すものです。\n\n■グラフ表示＆SNS投稿\n\nsakura.ioのWebSocket（`wss://api.sakura.io/ws/v1/.....`）サービスから送信されたJSONデータを用いてダッシュボード上にグラフを描画します。\nまた、グラフは`http://<IPアドレス>:<指定したWeb UIポート番号>/ui/`で確認することができます。\n\nオプションとして、Twittter IDを設定することで温度情報（Channel0）を取り出し、Twitterにメッセージを投稿します。\n\n以下2点を設定しデプロイすることで動作します。\n\n1. sakuraio_in(WebSocket-inノード)\n\n    sakura.ioコンパネで確認できるWebSocketのURL（`wss://api.sakura.io/ws/v1/.....`）を設定します。\n\n2. Tweet(Twitterノード)\n\n    認証を行いTwitterのアカウントを連携します。（鍵アカウントでは動作しません）\n    \n\n> [sakura.io コントロールパネル](https://secure.sakura.ad.jp/iot/)\n\n> [利用Arduinoスケッチ1（HDC1000利用時）](https://github.com/sakuraio/handson-sample/blob/master/arduino/basic-HDC1000-with-LED.ino)\n\n> [利用Arduinoスケッチ2（SHT31利用時）](https://github.com/sakuraio/handson-sample/blob/master/arduino/basic-SHT31-with-LED.ino)\n\n> [参考ハンズオン資料](https://www.slideshare.net/sakura_pr/sakuraio-handson-with-val-laboratory)"
+    },
+    {
+        "id": "f20e450.0e38db8",
+        "type": "websocket in",
+        "z": "7cf29ec2.c2e5a",
+        "name": "sakuraio_in",
+        "server": "",
+        "client": "8107e288.90ed8",
+        "x": 110,
+        "y": 80,
+        "wires": [
+            [
+                "75a47006.ad5be",
+                "90713763.7687f8"
+            ]
+        ]
+    },
+    {
+        "id": "75a47006.ad5be",
+        "type": "json",
+        "z": "7cf29ec2.c2e5a",
+        "name": "String→Object",
+        "pretty": false,
+        "x": 340,
+        "y": 80,
+        "wires": [
+            [
+                "49949438.e70b7c"
+            ]
+        ]
+    },
+    {
+        "id": "49949438.e70b7c",
+        "type": "switch",
+        "z": "7cf29ec2.c2e5a",
+        "name": "Type_Check",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "channels",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 1,
+        "x": 150,
+        "y": 280,
+        "wires": [
+            [
+                "9280b077.0777b",
+                "86ec5192.4757c"
+            ]
+        ]
+    },
+    {
+        "id": "9280b077.0777b",
+        "type": "function",
+        "z": "7cf29ec2.c2e5a",
+        "name": "Ch0(temp)_parse",
+        "func": "msg.payload = Math.round(msg.payload.payload.channels[0].value*10)/10;return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 200,
+        "wires": [
+            [
+                "c0ad165f.8a7a68",
+                "81fe069c.1d53f8",
+                "917b355e.6f1598",
+                "5109ea4d.946be4"
+            ]
+        ]
+    },
+    {
+        "id": "81fe069c.1d53f8",
+        "type": "ui_chart",
+        "z": "7cf29ec2.c2e5a",
+        "name": "Temp_chart",
+        "group": "6d6d4e99.13e86",
+        "order": 2,
+        "width": "8",
+        "height": "5",
+        "label": "温度 (10分)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 590,
+        "y": 220,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "c0ad165f.8a7a68",
+        "type": "ui_gauge",
+        "z": "7cf29ec2.c2e5a",
+        "name": "Temp_gauge",
+        "group": "6d6d4e99.13e86",
+        "order": 1,
+        "width": "8",
+        "height": "5",
+        "gtype": "gage",
+        "title": "現在の温度",
+        "label": "℃",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "40",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "30",
+        "seg2": "32",
+        "x": 590,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "917b355e.6f1598",
+        "type": "debug",
+        "z": "7cf29ec2.c2e5a",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 590,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "86ec5192.4757c",
+        "type": "function",
+        "z": "7cf29ec2.c2e5a",
+        "name": "Ch1(humi)_parse",
+        "func": "msg.payload = Math.round(msg.payload.payload.channels[1].value*10)/10;return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 360,
+        "wires": [
+            [
+                "c1730939.8829e8",
+                "b88e039b.d5c58",
+                "b7c50f75.a978"
+            ]
+        ]
+    },
+    {
+        "id": "cccd8faf.fd96d",
+        "type": "debug",
+        "z": "7cf29ec2.c2e5a",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 930,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "9e8e7ad.6159688",
+        "type": "function",
+        "z": "7cf29ec2.c2e5a",
+        "name": "Message",
+        "func": "msg.payload = `ヴァル研究所とさくらインターネットのコラボハンズオンで温度情報を取得中！ただ今の現地温度は${msg.payload}度だよ。資料は https://goo.gl/qb8QgZ です！どちらもよろしくお願いします！ #sakuraio #駅すぱあとWebサービス`;return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 260,
+        "wires": [
+            [
+                "b5d8091a.081cc8",
+                "cccd8faf.fd96d"
+            ]
+        ]
+    },
+    {
+        "id": "5109ea4d.946be4",
+        "type": "trigger",
+        "z": "7cf29ec2.c2e5a",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "10",
+        "extend": false,
+        "units": "min",
+        "reset": "",
+        "name": "",
+        "x": 590,
+        "y": 260,
+        "wires": [
+            [
+                "9e8e7ad.6159688"
+            ]
+        ]
+    },
+    {
+        "id": "b5d8091a.081cc8",
+        "type": "twitter out",
+        "z": "7cf29ec2.c2e5a",
+        "twitter": "",
+        "name": "Tweet",
+        "x": 910,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "c1730939.8829e8",
+        "type": "debug",
+        "z": "7cf29ec2.c2e5a",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 590,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "b88e039b.d5c58",
+        "type": "ui_gauge",
+        "z": "7cf29ec2.c2e5a",
+        "name": "Humi_gauge",
+        "group": "4d07ef3f.f23ea",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "gtype": "gage",
+        "title": "現在の湿度",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#00b500",
+            "#0000d2"
+        ],
+        "seg1": "30",
+        "seg2": "70",
+        "x": 590,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "b7c50f75.a978",
+        "type": "ui_chart",
+        "z": "7cf29ec2.c2e5a",
+        "name": "Humi_chart",
+        "group": "4d07ef3f.f23ea",
+        "order": 0,
+        "width": "8",
+        "height": "5",
+        "label": "湿度 (10分)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": "10",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": true,
+        "x": 590,
+        "y": 400,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d78227a8.d34958",
+        "type": "comment",
+        "z": "7cf29ec2.c2e5a",
+        "name": "グラフ表示＆SNS投稿",
+        "info": "",
+        "x": 120,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "90713763.7687f8",
+        "type": "debug",
+        "z": "7cf29ec2.c2e5a",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 190,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "8107e288.90ed8",
+        "type": "websocket-client",
+        "z": "",
+        "path": "wss://api.sakura.io/ws/v1/",
+        "wholemsg": "false"
+    },
+    {
+        "id": "6d6d4e99.13e86",
+        "type": "ui_group",
+        "z": "",
+        "name": "温度",
+        "tab": "82da4147.a75f7",
+        "order": 1,
+        "disp": true,
+        "width": "8"
+    },
+    {
+        "id": "4d07ef3f.f23ea",
+        "type": "ui_group",
+        "z": "",
+        "name": "湿度",
+        "tab": "82da4147.a75f7",
+        "order": 2,
+        "disp": true,
+        "width": "8"
+    },
+    {
+        "id": "82da4147.a75f7",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Handson",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
