@@ -11,17 +11,17 @@ ACCESS CONTROL ： チェックなし
 EVENT ： 指定なし
 */
 exports.handler = function(context, event, callback) {
-  // switchパラメータで、エアコンのOnとOffを制御　Control on / off of air conditioner with switch parameter
-  const sw = event.switch || 'off'
-  const value = ( sw === 'on' ? 1 : 0 )
-  const message = ( sw === 'on' ? 'エアコンをつけました' : 'エアコンを消しました' )
+  // switchパラメータで、エアコンのOnとOffを制御 Control on / off of air conditioner with switch parameter
+  const sw = event.switch || 'off';
+  const value = ( sw === 'on' ? 1 : 0 );
+  const message = ( sw === 'on' ? 'エアコンをつけました' : 'エアコンを消しました' );
 
-  // 返送するJSONデータの指定（ヘッダおよびMODULE_IDを含むボディ）　Specify JSON data to send back
-  const got = require('got')
+  // 返送するJSONデータの指定（ヘッダおよびMODULE_IDを含むボディ） Specify JSON data to send back
+  const got = require('got');
   const headers = JSON.stringify({
     "Content-Type": "application/json",
     "Accept": "application/json"
-  })
+  });
   const body = JSON.stringify({
     "type": "channels",
     "module": context.MODULE_ID,
@@ -32,33 +32,33 @@ exports.handler = function(context, event, callback) {
         "value": value
       }]
     }
-  })
+  });
 
-  // 音声の指定（声、言語）　Audio specification
-  let twiml = new Twilio.twiml.VoiceResponse()
-  let sayParam = {}
-  sayParam.language = 'ja-JP'
-  sayParam.voice = 'alice'
+  // 音声の指定（声、言語） Audio specification
+  let twiml = new Twilio.twiml.VoiceResponse();
+  let sayParam = {};
+  sayParam.language = 'ja-JP';
+  sayParam.voice = 'alice';
 
-  // 送信先URLの指定（SAKURA_URL）　Specify the destination URL
+  // 送信先URLの指定（SAKURA_URL） Specify th destination URL
   got(context.SAKURA_URL, {
     json: true,
     method: 'POST',
     headers: headers,
     body: body
   })
-  // 成功した場合の挙動の指定　Designation of successful behavior
+  // 成功した場合の挙動の指定 Designation of behavior in case of success
   .then(response => {
-    console.log(response)
-    twiml.say(sayParam, message)
-    twiml.hangup()
-    callback(null, twiml)
+    console.log(response);
+    twiml.say(sayParam, message);
+    twiml.hangup();
+    callback(null, twiml);
   })
-  // 失敗した場合の挙動の指定　Designation of behavior in case of failure
+  // 失敗した場合の挙動の指定 Designation of behavior in case of failure
   .catch(error => {
-    console.log(error)
-    twiml.say(sayParam, 'エラーが発生しました')
-    twiml.hangup()
-    callback(null, twiml)
-  })
+    console.log(error);
+    twiml.say(sayParam, 'エラーが発生しました');
+    twiml.hangup();
+    callback(null, twiml);
+  });
 };

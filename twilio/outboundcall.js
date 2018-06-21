@@ -34,8 +34,8 @@ exports.handler = function(context, event, callback) {
       from: context.FROM_NUMBER,
     })
     .then((call) => callback(null, call.sid))
-    .catch((error)=> callback(error))
+    .catch((error)=> callback(error));
   } else {
-    callback(null, 'moduleId was unmatch')
+    callback(null, 'moduleId was unmatch');
   }
 };
