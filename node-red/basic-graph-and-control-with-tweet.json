@@ -194,7 +194,7 @@
         "type": "function",
         "z": "57449933.976cf8",
         "name": "Message",
-        "func": "msg.payload = `さくらインターネットのハンズオンで温度情報を取得中！ただ今の現地温度は${msg.payload}度だよ。資料は https://goo.gl/QzJ9bv です！今後ともよろしくお願いします！ #sakuraio #さくらインターネット`;return msg;",
+        "func": "msg.payload = `さくらインターネットのハンズオンで温度情報を取得中！ただ今の現地温度は${msg.payload}度だよ。資料は http://bit.ly/hosap101 です！今後ともよろしくお願いします！ #sakuraio #さくらインターネット`;return msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 760,
