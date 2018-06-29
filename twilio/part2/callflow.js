@@ -10,6 +10,7 @@ ACCESS CONTROL ： チェックなし
 EVENT ： 指定なし
 */
 exports.handler = function(context, event, callback) {
+    
     // モジュールからのメッセージの場合のみ処理を行う(切断・接続メッセージなどは無視) Determining the message type
     const messageType = event.type;
     if (messageType !== "channels") {
@@ -19,6 +20,12 @@ exports.handler = function(context, event, callback) {
 
     // JSONデータに含まれるモジュールIDを変数に代入 Substitute the module ID included in the JSON data
     const moduleId = event.module || '';
+
+    // モジュールIDの照合 Verification of module ID
+    if (moduleId !== context.MODULE_ID) {
+        console.log("Module ID unmatch");
+        callback(null, 'Module id unmatch.');
+    }
 
     const twilioClient = context.getTwilioClient();
     twilioClient.studio.flows('FWから始まるStudioフローのSID').engagements.create({ 
