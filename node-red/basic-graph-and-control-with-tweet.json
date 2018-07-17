@@ -558,7 +558,7 @@
         "type": "function",
         "z": "dbab9424.ebe0f8",
         "name": "moduleID_set",
-        "func": "//context.global.moduleに制御対象のモジュールIDを指定\ncontext.global.module = \"uFGA8J0mypWW\";\n\nmsg.payload = context.global.module;\nreturn msg;",
+        "func": "//context.global.moduleに制御対象のモジュールIDを指定\ncontext.global.module = \"%%moduleID%%\";\n\nmsg.payload = context.global.module;\nreturn msg;",
         "outputs": "1",
         "noerr": 0,
         "x": 340,
