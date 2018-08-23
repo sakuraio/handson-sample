@@ -80,4 +80,6 @@ void loop() {
     }
     sakuraio.clearRx();
   }
+  // 待機時間の調整　Adjust wait time
+  delay(5000);
 }

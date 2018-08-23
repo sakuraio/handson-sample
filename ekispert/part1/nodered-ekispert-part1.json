@@ -1,0 +1,410 @@
+[
+    {
+        "id": "698e28bd.9d5ef8",
+        "type": "tab",
+        "label": "駅すぱあとWebサービス連携",
+        "disabled": false,
+        "info": "本フローは駅すぱあとWebサービス＆sakura.ioハンズオンで利用する、Arduino Unoと温度センサを用いたセンシング情報と駅情報や経路情報の連携を試すものです。\n\n■準備\n\n本フローは以下のノード追加が必要です。\n\n1. node-red-contrib-ekispert-api\n\n2. node-red-contrib-slack\n\n■駅名＆駅コードの取得\n\nデプロイ時にStationノードに指定した駅名に基づき駅名および駅コードを取得し、変数に格納します。\n以下を設定しデプロイすることで動作します。\n\n1. Stationノード：name欄に任意の駅名を、key欄に駅すぱあとWebサービスのAPIのアクセスキーを、それぞれ指定します。\n\n■駅すぱあと範囲探索＆Slack投稿\n\nsakura.ioのWebSocket（`wss://api.sakura.io/ws/v1/.....`）サービスから送信されたJSONデータに含まれる温度が指定範囲を逸脱した場合、その内容を元にSlackの該当チャンネルに対して、センサからの温度情報、および指定した駅コードを元に指定時間内に行くことができる経路情報の2つのメッセージを生成し投稿します。\n\n以下3点を設定しデプロイすることで動作します。\n\n1. sakuraio_in(WebSocket-inノード)：sakura.ioコンパネで確認できるWebSocketのURL（`wss://api.sakura.io/ws/v1/.....`）を設定します。\n \n2. search rangeノード：key欄に駅すぱあとWebサービスのAPIのアクセスキーを、upperMinute欄に任意の分数を、それぞれ指定します。baselist欄が空欄であるためエラーを示す▲マークが表示されますが、前段のノードでセットしたbaselistが送信されるため、記入は不要です。\n\n3. slackノード：WebHook URL欄に投稿先となるSlackチーム内チャンネルのIncoming WebHooksのURLを指定します。\n\n> [sakura.io コントロールパネル](https://secure.sakura.ad.jp/iot/)\n\n> [利用Arduinoスケッチ](https://github.com/sakuraio/handson-sample/blob/reform/ekispert/part1/arduino-ekispert-part1.ino)\n\n> [参考ハンズオン資料](https://speakerdeck.com/sakuraiot/sakuraio-handson-val-part1)"
+    },
+    {
+        "id": "660095bc.bce4ac",
+        "type": "comment",
+        "z": "698e28bd.9d5ef8",
+        "name": "駅すぱあと範囲探索＆Slack投稿",
+        "info": "",
+        "x": 170,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "694d0e22.56d5f",
+        "type": "function",
+        "z": "698e28bd.9d5ef8",
+        "name": "Route_Gen",
+        "func": "var points = msg.payload.ResultSet.Point;\n\nif(!Array.isArray(points)){\n  points = [points];\n}\n\nvar displayStations = [];\n\nfor(var i = 0; i < points.length; i++) {\n  displayStations.push(\"・\" + points[i].Station.Name + \"駅 \" + points[i].Cost.Minute + \"分 乗換\" + points[i].Cost.TransferCount + \"回\");\n}\n\nvar newMsg = {\n  payload: displayStations.join(\"\\n\")\n};\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 710,
+        "y": 460,
+        "wires": [
+            [
+                "d028064a.eae818"
+            ]
+        ]
+    },
+    {
+        "id": "86422509.ba6678",
+        "type": "slack",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "channelURL": "",
+        "username": "",
+        "emojiIcon": "",
+        "channel": "",
+        "x": 1050,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "3bb1e048.ec22f",
+        "type": "debug",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 1070,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "983119dc.074e78",
+        "type": "switch",
+        "z": "698e28bd.9d5ef8",
+        "name": "Temp_Range",
+        "property": "payload.payload.channels[1].value",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "15",
+                "vt": "num"
+            },
+            {
+                "t": "gt",
+                "v": "30",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "a31487ab.83b338"
+            ],
+            [
+                "a31487ab.83b338"
+            ]
+        ]
+    },
+    {
+        "id": "63204628.38a2c8",
+        "type": "search range",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "accessKey": "",
+        "baseList": "",
+        "upperMinute": "10",
+        "upperTransferCount": "",
+        "plane": "",
+        "shinkansen": "",
+        "limitedExpress": "",
+        "limit": "",
+        "x": 330,
+        "y": 460,
+        "wires": [
+            [
+                "53ec59c7.662b78"
+            ]
+        ]
+    },
+    {
+        "id": "558a771d.cf97d8",
+        "type": "template",
+        "z": "698e28bd.9d5ef8",
+        "name": "Message_1",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "部屋の環境がよろしくないみたい！\n温度：{{global.temp}}度",
+        "output": "str",
+        "x": 890,
+        "y": 340,
+        "wires": [
+            [
+                "4e39c13d.44b91",
+                "86422509.ba6678"
+            ]
+        ]
+    },
+    {
+        "id": "d028064a.eae818",
+        "type": "template",
+        "z": "698e28bd.9d5ef8",
+        "name": "Message_2",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "気分転換にお出かけでもどう？\n{{global.stationName}}から行ける駅を調べたよ!\n{{payload}}",
+        "output": "str",
+        "x": 890,
+        "y": 460,
+        "wires": [
+            [
+                "3bb1e048.ec22f",
+                "86422509.ba6678"
+            ]
+        ]
+    },
+    {
+        "id": "881fb021.7f44a",
+        "type": "websocket in",
+        "z": "698e28bd.9d5ef8",
+        "name": "sakuraio-in",
+        "server": "",
+        "client": "e9e2eb9a.7b06e8",
+        "x": 120,
+        "y": 220,
+        "wires": [
+            [
+                "47f988.63774678"
+            ]
+        ]
+    },
+    {
+        "id": "47f988.63774678",
+        "type": "json",
+        "z": "698e28bd.9d5ef8",
+        "name": "String -> Object",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 340,
+        "y": 220,
+        "wires": [
+            [
+                "5dcd162b.37b2b8"
+            ]
+        ]
+    },
+    {
+        "id": "5dcd162b.37b2b8",
+        "type": "switch",
+        "z": "698e28bd.9d5ef8",
+        "name": "Type_Check",
+        "property": "payload.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "channels",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 530,
+        "y": 220,
+        "wires": [
+            [
+                "50fb9703.f5c2e8"
+            ]
+        ]
+    },
+    {
+        "id": "f75db22.991515",
+        "type": "debug",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1070,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "8f01123f.09827",
+        "type": "function",
+        "z": "698e28bd.9d5ef8",
+        "name": "Name&Code_Set",
+        "func": "var points = msg.payload.ResultSet.Point;\nif(!Array.isArray(points))\n{\n  points = [points];}\n\ncontext.global.stationName = points[0].Station.Name;\ncontext.global.stationCode = points[0].Station.code;\n\nreturn {\n  payload: {\n    stationName: context.global.stationName,\n    stationCode: context.global.stationCode\n  }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 730,
+        "y": 100,
+        "wires": [
+            [
+                "1a0699d8.913bb6"
+            ]
+        ]
+    },
+    {
+        "id": "6225166e.bcf138",
+        "type": "inject",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "70cecf41.204f5"
+            ]
+        ]
+    },
+    {
+        "id": "70cecf41.204f5",
+        "type": "station",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "accessKey": "",
+        "stationName": "高円寺",
+        "stationCode": "",
+        "stationOldName": "",
+        "corporationName": "",
+        "railName": "",
+        "operationLineCode": "",
+        "trafficType": "",
+        "prefectureCode": "",
+        "offset": "",
+        "limit": "",
+        "direction": "",
+        "corporationBind": "",
+        "gcs": "",
+        "x": 310,
+        "y": 100,
+        "wires": [
+            [
+                "8f01123f.09827"
+            ]
+        ]
+    },
+    {
+        "id": "1a0699d8.913bb6",
+        "type": "debug",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "complete": "false",
+        "x": 1070,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "582ce21c.371ccc",
+        "type": "template",
+        "z": "698e28bd.9d5ef8",
+        "name": "Code_Push",
+        "field": "baseList",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{{global.stationCode}}",
+        "output": "str",
+        "x": 150,
+        "y": 460,
+        "wires": [
+            [
+                "63204628.38a2c8"
+            ]
+        ]
+    },
+    {
+        "id": "d586e8ab.f07f88",
+        "type": "comment",
+        "z": "698e28bd.9d5ef8",
+        "name": "駅名＆駅コードの取得",
+        "info": "",
+        "x": 140,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a31487ab.83b338",
+        "type": "trigger",
+        "z": "698e28bd.9d5ef8",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "1",
+        "extend": false,
+        "units": "min",
+        "reset": "",
+        "bytopic": "all",
+        "name": "",
+        "x": 330,
+        "y": 340,
+        "wires": [
+            [
+                "558a771d.cf97d8",
+                "582ce21c.371ccc"
+            ]
+        ]
+    },
+    {
+        "id": "50fb9703.f5c2e8",
+        "type": "function",
+        "z": "698e28bd.9d5ef8",
+        "name": "Temp_Set",
+        "func": "// 温度をグローバル変数に代入\ncontext.global.temp = Math.round(msg.payload.payload.channels[1].value*10)/10;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 220,
+        "wires": [
+            [
+                "f75db22.991515",
+                "983119dc.074e78"
+            ]
+        ]
+    },
+    {
+        "id": "4e39c13d.44b91",
+        "type": "debug",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 1070,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "53ec59c7.662b78",
+        "type": "delay",
+        "z": "698e28bd.9d5ef8",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 520,
+        "y": 460,
+        "wires": [
+            [
+                "694d0e22.56d5f"
+            ]
+        ]
+    },
+    {
+        "id": "e9e2eb9a.7b06e8",
+        "type": "websocket-client",
+        "z": "",
+        "path": "wss://api.sakura.io/ws/v1/",
+        "wholemsg": "false"
+    }
+]
