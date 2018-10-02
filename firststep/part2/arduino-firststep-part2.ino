@@ -1,5 +1,4 @@
 // ヘッダファイル指定　Including header files
-#include <math.h>
 #include <SakuraIO.h>
 
 // LEDの定義　Definition of LED
@@ -27,6 +26,9 @@ void setup() {
   pinMode(LED_1, OUTPUT);
   pinMode(LED_2, OUTPUT);
   pinMode(LED_3, OUTPUT);
+  digitalWrite(LED_1, HIGH);
+  digitalWrite(LED_2, HIGH);
+  digitalWrite(LED_3, HIGH);
 }
 
 // 以下ループ実行　Loop execution
@@ -37,15 +39,12 @@ void loop() {
   Serial.println(cnt);
 
   // 温度情報の取得　Get temperature
-    int a = analogRead(pinTempSensor);
-
-    float R = 1023.0/a-1.0;
-    R = R0*R;
-
-    float temp = 1.0/(log(R/R0)/B+1/298.15)-273.15; // convert to temperature via datasheet
-
-    Serial.print("Temperature :");
-    Serial.println(temp);
+  int a = analogRead(pinTempSensor);
+  float R = 1023.0 / a - 1.0;
+  R = R0 * R;
+  float temp = 1.0 / (log(R / R0) / B + 1 / 298.15) - 273.15; // convert to temperature via datasheet
+  Serial.print("Temperature :");
+  Serial.println(temp);
 
   // さくらの通信モジュールへの各値のキューイング　Queuing each value to module
   if (sakuraio.enqueueTx(0, cnt) != CMD_ERROR_NONE) {
@@ -82,23 +81,25 @@ void loop() {
       uint8_t ch, type, value[8];
       int64_t offset;
       sakuraio.dequeueRx(&ch, &type, value, &offset);
+
+      // LED点灯制御部(ActiveLow)
       if (ch == 0) {
         if (value[0] == 1) {
-          digitalWrite(LED_1, HIGH);
-        } else {
           digitalWrite(LED_1, LOW);
+        } else {
+          digitalWrite(LED_1, HIGH);
         }
       } else if (ch == 1) {
         if (value[0] == 1) {
-          digitalWrite(LED_2, HIGH);
-        } else {
           digitalWrite(LED_2, LOW);
+        } else {
+          digitalWrite(LED_2, HIGH);
         }
       } else if (ch == 2) {
         if (value[0] == 1) {
-          digitalWrite(LED_3, HIGH);
-        } else {
           digitalWrite(LED_3, LOW);
+        } else {
+          digitalWrite(LED_3, HIGH);
         }
       }
     }
