@@ -1,15 +1,6 @@
-WITH Tmps AS (
 SELECT
-  e.INPUT.ConnectionDeviceId as ConnectionDeviceId,  e.module as module,
-  chs.ArrayValue.channel,  chs.ArrayValue.type,  chs.ArrayValue.value as temp,
-  chs.ArrayValue.datetime
-FROM INPUT AS e
-CROSS APPLY GetElements (e.payload.channels) as chs
-WHERE chs.ArrayValue.channel = 0
-)
-Select  avg(Tmps.temp)
-Into  OUTPUT1 
-From Tmps
-GROUP BY  TumblingWindow(second, 10);
-
-SELECT  * INTO OUTPUT2 FROM INPUT;
+    *
+INTO
+    raw
+FROM
+    sakuraio
