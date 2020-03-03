@@ -1,8 +1,8 @@
-# Fabo-RasPi.py
+# rpi-fabo.py
 # Raspberry Pi + Faboとsakura.ioでデータの送受信をするプログラム
 # (Raspberry Pi側で動かすプログラム)
 # 使い方:
-# % python3 Fabo-RasPi.py
+# % python3 rpi-fabo.py
 
 
 from sakuraio.hardware.rpi import SakuraIOSMBus

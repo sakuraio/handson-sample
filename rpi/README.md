@@ -24,7 +24,7 @@
 
 ### 使い方
 
-% python3 Fabo-RasPi.py
+% python3 rpi-fabo.py
 
 
 ## sakuraio-send.py
