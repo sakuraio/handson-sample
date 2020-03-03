@@ -59,9 +59,10 @@
 
 ## websocket-recv.py
 
-* PCで動かすプログラムです。
+* PCもしくはサーバで動かすプログラムです。
 * sakura.ioから送られてきたデータを受信するプログラムです。
-* 使用前に、WebSocketのURLを設定する必要があります。
+* 事前に、Pythonのwebsocketモジュールをインストールしてください。
+* WebSocketのURLを設定してから実行してください。
 
 ### 使い方
 
@@ -70,9 +71,10 @@
 
 ## websocket-send.py
 
-* PCで動かすプログラムです。
+* PCもしくはサーバで動かすプログラムです。
 * Faboに接続されたLEDを操作するデータをsakura.ioに送信するプログラムです。
-* 使用前に、WebSocketのURLと、sakura.ioモジュールのIDを設定する必要があります。
+* 事前に、Pythonのwebsocketモジュールをインストールしてください。
+* WebSocketのURLと、sakura.ioモジュールのIDを設定してから実行してください。
 
 ### 使い方
 

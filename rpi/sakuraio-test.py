@@ -1,10 +1,10 @@
 # sakuraio-test.py
-# sakura.io��ư��ƥ��ȥץ������
-# (Raspberry Pi��sakura.io����³���Ƽ¹�)
-# �Ȥ���:
-# % python3�ǥ��󥿥饯�ƥ��֥������ư����
-# >>> ���ФƤ�����1�Ԥ������Ϥ���ENTER
-# �⤷����
+# sakura.ioの動作テストプログラム
+# (Raspberry Piでsakura.ioを接続して実行)
+# 使い方:
+# % python3でインタラクティブシェルを起動し、
+# >>> が出てきたら1行ずつ入力してENTER
+# もしくは
 # % python3 sakuraio-test.py
 
 
