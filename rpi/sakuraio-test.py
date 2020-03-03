@@ -1,14 +1,13 @@
 # sakuraio-test.py
-# sakura.io¤ÎÆ°ºî¥Æ¥¹¥È¥×¥í¥°¥é¥à
-# (Raspberry Pi¤Çsakura.io¤òÀÜÂ³¤·¤Æ¼Â¹Ô)
-# »È¤¤Êı:
-# % python3¤Ç¥¤¥ó¥¿¥é¥¯¥Æ¥£¥Ö¥·¥§¥ë¤òµ¯Æ°¤·¡¢
-# >>> ¤¬½Ğ¤Æ¤­¤¿¤é1¹Ô¤º¤ÄÆşÎÏ¤·¤ÆENTER
-# ¤â¤·¤¯¤Ï
+# sakura.ioã®å‹•ä½œãƒ†ã‚¹ãƒˆãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+# (Raspberry Piã§sakura.ioã‚’æ¥ç¶šã—ã¦å®Ÿè¡Œ)
+# ä½¿ã„æ–¹:
+# % python3ã§ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒ†ã‚£ãƒ–ã‚·ã‚§ãƒ«ã‚’èµ·å‹•ã—ã€
+# >>> ãŒå‡ºã¦ããŸã‚‰1è¡Œãšã¤å…¥åŠ›ã—ã¦ENTER
+# ã‚‚ã—ãã¯
 # % python3 sakuraio-test.py
 
 
-# coding: utf-8
 import sakuraio
 from sakuraio.hardware.rpi import SakuraIOSMBus
 sakuraio = SakuraIOSMBus()

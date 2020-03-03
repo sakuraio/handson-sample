@@ -2,7 +2,7 @@
 
 ## 概要
 
-「Raspberry Pi & sakura.io 体験ハンズオン」にて使用するサンプルプログラム集です。本ハンズオンでは、sakura.ioのコンセプトをより深く体験いただくため、簡単なIoTサービスを構築します。具体的には「温度センサとLEDを搭載するIoTデバイス」および「センサデータの可視化とデバイスの制御を行うサービス」を構築します。IoTデバイス側のコンピュータとしてRaspberry Pi、IoTデバイスとしてFabo、プログラミング言語はPythonを使用します。
+「Raspberry Pi & sakura.io 体験ハンズオン」にて使用するサンプルプログラム集です。本ハンズオンでは、sakura.ioのコンセプトをより深く体験いただくため、簡単なIoTサービスを構築します。具体的には「温度センサとLEDを搭載するIoTデバイス」および「センサデータの可視化とデバイスの制御を行うサービス」を構築します。IoTデバイス側のコンピュータとしてRaspberry Pi、IoTデバイスとしてFabo、プログラミング言語はPython 3を使用します。
 
 ## install-devtools.sh
 
@@ -24,7 +24,7 @@
 
 ### 使い方
 
-% python3 Fabo-RasPi.py
+% python3 rpi-fabo.py
 
 
 ## sakuraio-send.py
@@ -59,9 +59,10 @@
 
 ## websocket-recv.py
 
-* PCで動かすプログラムです。
+* PCもしくはサーバで動かすプログラムです。
 * sakura.ioから送られてきたデータを受信するプログラムです。
-* 使用前に、WebSocketのURLを設定する必要があります。
+* 事前に、Pythonのwebsocketモジュールをインストールしてください。
+* WebSocketのURLを設定してから実行してください。
 
 ### 使い方
 
@@ -70,9 +71,10 @@
 
 ## websocket-send.py
 
-* PCで動かすプログラムです。
+* PCもしくはサーバで動かすプログラムです。
 * Faboに接続されたLEDを操作するデータをsakura.ioに送信するプログラムです。
-* 使用前に、WebSocketのURLと、sakura.ioモジュールのIDを設定する必要があります。
+* 事前に、Pythonのwebsocketモジュールをインストールしてください。
+* WebSocketのURLと、sakura.ioモジュールのIDを設定してから実行してください。
 
 ### 使い方
 

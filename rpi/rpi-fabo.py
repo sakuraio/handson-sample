@@ -1,13 +1,12 @@
-# coding: utf-8
-
-# Fabo-RasPi.py
+# rpi-fabo.py
 # Raspberry Pi + Faboとsakura.ioでデータの送受信をするプログラム
 # (Raspberry Pi側で動かすプログラム)
 # 使い方:
-# % python3 Fabo-RasPi.py
+# % python3 rpi-fabo.py
 
 
 from sakuraio.hardware.rpi import SakuraIOSMBus
+from decimal import *
 import RPi.GPIO as GPIO
 import spidev
 import time
@@ -26,7 +25,13 @@ def readadc(channel):
 
 # 取得した値の変換
 def arduino_map(x, in_min, in_max, out_min, out_max):
-    return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
+    a = Decimal(x - in_min)
+    b = Decimal(out_max - out_min)
+    c = Decimal(in_max - in_min)
+    d = Decimal(out_min)
+    e = Decimal(a*b/c+d).quantize(Decimal('.01'))
+#    print(a,b,c,d,e)
+    return e
 
 # 初期化
 spi = spidev.SpiDev()
@@ -45,7 +50,8 @@ try:
         # 温度センサーから値を取得し電圧を経て温度に変換
         data = readadc(TEMPPIN)
         volt = arduino_map(data, 0, 1023, 0, 5000)
-        temp = arduino_map(volt, 300, 1600, -30, 100)
+        deci_temp = arduino_map(volt, 300, 1600, -30, 100)
+        temp = float(deci_temp)
         # ch0にカウンター、ch1に温度を入れて送信
         sakuraio.enqueue_tx(0, cnt)
         sakuraio.enqueue_tx(1, temp)
@@ -59,7 +65,7 @@ try:
         if (sakuraio.get_rx_queue_length()).get('queued'):
             dict_data = sakuraio.dequeue_rx_raw()
             led = dict_data['data'][0]
-            print(led)
+            print("led = %i" % (led))
         else:
             print("nothing recv...")
         # ledが1ならLEDを点灯、0なら消灯、それ以外なら何もしない

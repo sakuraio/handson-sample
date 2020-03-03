@@ -1,18 +1,17 @@
 # sakuraio-send.py
-# sakura.io¤Î¥Ç¡¼¥¿Á÷¿®¥Æ¥¹¥È¥×¥í¥°¥é¥à
-# (Raspberry Pi¤Çsakura.io¤òÀÜÂ³¤·¤Æ¼Â¹Ô)
-# »È¤¤Êı:
-# % python3¤Ç¥¤¥ó¥¿¥é¥¯¥Æ¥£¥Ö¥·¥§¥ë¤òµ¯Æ°¤·¡¢
-# >>> ¤¬½Ğ¤Æ¤­¤¿¤é1¹Ô¤º¤ÄÆşÎÏ¤·¤ÆENTER
-# ¤â¤·¤¯¤Ï
+# sakura.ioã®ãƒ‡ãƒ¼ã‚¿é€ä¿¡ãƒ†ã‚¹ãƒˆãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+# (Raspberry Piã§sakura.ioã‚’æ¥ç¶šã—ã¦å®Ÿè¡Œ)
+# ä½¿ã„æ–¹:
+# % python3ã§ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒ†ã‚£ãƒ–ã‚·ã‚§ãƒ«ã‚’èµ·å‹•ã—ã€
+# >>> ãŒå‡ºã¦ããŸã‚‰1è¡Œãšã¤å…¥åŠ›ã—ã¦ENTER
+# ã‚‚ã—ãã¯
 # % python3 sakuraio-send.py
 #
-# »²¹Í:
-# sakuraio.enqueue_tx(0, 1)¤Î1¤òÇ¤°Õ¤ÎÃÍ¤ËÊÑ¤¨¤ë¤È
-# sakura.io¤ËÁ÷¿®¤µ¤ì¤ëÃÍ¤¬ÊÑ¤ï¤ë
+# å‚è€ƒ:
+# sakuraio.enqueue_tx(0, 1)ã®1ã‚’ä»»æ„ã®å€¤ã«å¤‰ãˆã‚‹ã¨
+# sakura.ioã«é€ä¿¡ã•ã‚Œã‚‹å€¤ãŒå¤‰ã‚ã‚‹
 
 
-# coding: utf-8
 from sakuraio.hardware.rpi import SakuraIOSMBus
 sakuraio = SakuraIOSMBus()
 sakuraio.enqueue_tx(0, 1)
