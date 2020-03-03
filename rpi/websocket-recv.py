@@ -8,7 +8,6 @@
 uri = "wss://api.sakura.io/ws/v1/xxxxxxx"
 
 
-# coding: utf-8
 # ライブラリのインポート
 from websocket import create_connection
 import time

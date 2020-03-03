@@ -12,7 +12,6 @@
 # sakura.ioに送信される値が変わる
 
 
-# coding: utf-8
 from sakuraio.hardware.rpi import SakuraIOSMBus
 sakuraio = SakuraIOSMBus()
 sakuraio.enqueue_tx(0, 1)

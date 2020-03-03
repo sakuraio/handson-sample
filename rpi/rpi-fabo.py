@@ -5,7 +5,6 @@
 # % python3 Fabo-RasPi.py
 
 
-# coding: utf-8
 from sakuraio.hardware.rpi import SakuraIOSMBus
 from decimal import *
 import RPi.GPIO as GPIO

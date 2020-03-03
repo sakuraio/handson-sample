@@ -8,7 +8,6 @@
 # % python3 sakuraio-test.py
 
 
-# coding: utf-8
 import sakuraio
 from sakuraio.hardware.rpi import SakuraIOSMBus
 sakuraio = SakuraIOSMBus()
